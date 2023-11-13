@@ -1,0 +1,563 @@
+package internals;
+
+import utils.TypeUtils;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+/**
+ * The Tensor class is the central part of the JNum library. A Tensor is an N-Dimensional (N>=0) array and the Tensor
+ * class holds this data as well as other metadata useful in different operations. Tensors are homogeneous, meaning
+ * all items in a tensor can and will be all of one type.
+ * All tensors have a shape, a list of integers, where shape[i] = the size of the tensor in dimension i.
+ * Tensor values are stored in a contiguous array, regardless of their shape, and tensors are equipped with strides
+ * which help us determine which dimension every item belongs to.
+ * The strides will be the number of elements we need to jump to move between elements of the same dimension.
+ * For example, for a 2-D array of 3 columns (number of rows irrelevant), the strides will be [3, 1]
+ * We need to jump 3 elements in the internal array to navigate between row 0 and row 1 in the same column.
+ * We need to jump 1 element in the internal array to navigate between column 0 and column 1 in the same row.
+ * Strides are therefore useful when we need to access one specific element in the internal array. In a [4, 2] array,
+ * the strides will be (4, 1), so for an element on line 2, column 0, we will compute the internal index like
+ * 4*2 + 1*0 = 8.
+ * Each Tensor has a dataType which tells us which child of the Java Number class is this Tensor instances supposed to
+ * hold.
+ * A Tensor instance can also be a view of another Tensor (called a base). This is important because many operations
+ * that we apply to a Tensor do not change the actual internal array, but only change its metadata, which makes a Tensor
+ * "look" like another view of a base Tensor. This is done for speed and memory optimisation purposes.
+ * The Tensors get initialised with an indexing table (0, 1, 2, ..., n-1) which can be re-written in operations
+ * such as Transpose, Reshape or Broadcast. Therefore, after such an operation, the n-th element of an
+ * internalIndexingTable of a view Tensor can point to the m-th element of its base Tensor.
+ */
+public final class Tensor {
+
+    private List<Integer> shape = new ArrayList<>();
+    private List<Integer> strides = new ArrayList<>();
+    private Number[] internalArray;
+    private JNumDataType dataType;
+    private int numberOfElements = 0;
+    private boolean isView;
+    private Tensor base;
+    private int[] internalIndexingTable;
+
+    public Tensor(Object data) {
+        buildShape(data);
+        buildStrides();
+        int numberOfElements = shape.stream().reduce(1, (i, j) -> i * j);
+        internalArray = new Number[numberOfElements];
+        buildInternalArray(data);
+        buildInternalIndexingTable();
+        dataType = TypeUtils.parseDataType(getValue(0).getClass());
+        isView = false;
+        base = null;
+    }
+
+    public Tensor(JNumDataType dataType, int[] shape) {
+        this.shape = Arrays.stream(shape).boxed().collect(Collectors.toList());
+        this.dataType = dataType;
+        buildStrides();
+        int numberOfElements = this.shape.stream().reduce(1, (i, j) -> i * j);
+        buildDefaultInternalArray(numberOfElements, TypeUtils::getDefaultValue);
+        buildInternalIndexingTable();
+        isView = false;
+        base = null;
+    }
+
+    public Number get(int... index) {
+        return getValue(index);
+    }
+
+    public void set(Number newValue, int... index) {
+        if (!this.dataType.equals(TypeUtils.parseDataType(newValue.getClass()))) {
+            throw new IllegalArgumentException(String.format("Cannot assign new value of class %s to Tensor of type %s", newValue.getClass().getComponentType(), dataType));
+        }
+        setValue(newValue, index);
+    }
+
+    public Tensor view() {
+        Tensor result = this.clone();
+        result.numberOfElements = 0;
+        result.internalArray = null;
+        result.internalIndexingTable = this.internalIndexingTable.clone();
+        result.isView = true;
+        result.base = this;
+        return result;
+    }
+
+    public Tensor transposed() {
+        return JNum.transpose(this);
+    }
+
+    public Tensor reshape(int[] newShape) {
+        return JNum.reshape(this, newShape);
+    }
+
+    public Tensor broadcast(int[] newShape) {
+        return JNum.broadcast(this, newShape);
+    }
+
+    public Tensor add(Tensor tensor) {
+        return JNum.add(this, tensor);
+    }
+
+    public Tensor subtract(Tensor tensor) {
+        return JNum.subtract(this, tensor);
+    }
+
+    public Tensor multiply(Tensor tensor) {
+        return JNum.multiply(this, tensor);
+    }
+
+    public Tensor divide(Tensor tensor) {
+        return JNum.divide(this, tensor);
+    }
+
+    public Tensor powerOf(Number value) {
+        return JNum.powerOf(this, value);
+    }
+
+    public Tensor log() {
+        return JNum.log(this);
+    }
+
+    public Tensor exp() {
+        return JNum.exp(this);
+    }
+
+    public Tensor sqrt() {
+        return JNum.sqrt(this);
+    }
+
+    public Tensor minus() {
+        return JNum.minus(this);
+    }
+
+    public Tensor min(Number value) {
+        return JNum.min(this, value);
+    }
+
+    public Tensor max(Number value) {
+        return JNum.max(this, value);
+    }
+
+    public Tensor clip(Number firstValue, Number secondValue) {
+        return JNum.clip(this, firstValue, secondValue);
+    }
+
+    public Tensor slice(int[][] limits) {
+        return JNum.slice(this, limits);
+    }
+
+    public Tensor dot(Tensor secondTensor) {
+        return JNum.dot(this, secondTensor);
+    }
+
+    public Tensor min() {
+        return JNum.min(this);
+    }
+
+    public Tensor min(boolean keepDimensions) {
+        return JNum.min(this, keepDimensions);
+    }
+
+    public Tensor min(int[] axis) {
+        return JNum.min(this, axis);
+    }
+
+    public Tensor min(int[] axis, boolean keepDimensions) {
+        return JNum.min(this, axis, keepDimensions);
+    }
+
+    public Tensor max() {
+        return JNum.max(this);
+    }
+
+    public Tensor max(boolean keepDimensions) {
+        return JNum.max(this, keepDimensions);
+    }
+
+    public Tensor max(int[] axis) {
+        return JNum.max(this, axis);
+    }
+
+    public Tensor max(int[] axis, boolean keepDimensions) {
+        return JNum.max(this, axis, keepDimensions);
+    }
+
+    public Tensor argMin() {
+        return JNum.argMin(this);
+    }
+
+    public Tensor argMin(boolean keepDimensions) {
+        return JNum.argMin(this, keepDimensions);
+    }
+
+    public Tensor argMin(int axis) {
+        return JNum.argMin(this, axis);
+    }
+
+    public Tensor argMin(int axis, boolean keepDimensions) {
+        return JNum.argMin(this, axis, keepDimensions);
+    }
+
+    public Tensor argMax() {
+        return JNum.argMax(this);
+    }
+
+    public Tensor argMax(boolean keepDimensions) {
+        return JNum.argMax(this, keepDimensions);
+    }
+
+    public Tensor argMax(int axis) {
+        return JNum.argMax(this, axis);
+    }
+
+    public Tensor argMax(int axis, boolean keepDimensions) {
+        return JNum.argMax(this, axis, keepDimensions);
+    }
+
+    public Tensor mean() {
+        return JNum.mean(this);
+    }
+
+    public Tensor mean(boolean keepDimensions) {
+        return JNum.mean(this, keepDimensions);
+    }
+
+    public Tensor mean(int[] axis) {
+        return JNum.mean(this, axis);
+    }
+
+    public Tensor mean(int[] axis, boolean keepDimensions) {
+        return JNum.mean(this, axis, keepDimensions);
+    }
+
+    public Tensor std() {
+        return JNum.std(this);
+    }
+
+    public Tensor std(boolean keepDimensions) {
+        return JNum.std(this, keepDimensions);
+    }
+
+    public Tensor std(int[] axis) {
+        return JNum.std(this, axis);
+    }
+
+    public Tensor std(int[] axis, boolean keepDimensions) {
+        return JNum.std(this, axis, keepDimensions);
+    }
+
+    public Tensor sum() {
+        return JNum.sum(this);
+    }
+
+    public Tensor sum(boolean keepDimensions) {
+        return JNum.sum(this, keepDimensions);
+    }
+
+    public Tensor sum(int[] axis) {
+        return JNum.sum(this, axis);
+    }
+
+    public Tensor sum(int[] axis, boolean keepDimensions) {
+        return JNum.sum(this, axis, keepDimensions);
+    }
+
+    public Tensor prod() {
+        return JNum.prod(this);
+    }
+
+    public Tensor prod(boolean keepDimensions) {
+        return JNum.prod(this, keepDimensions);
+    }
+
+    public Tensor prod(int[] axis) {
+        return JNum.prod(this, axis);
+    }
+
+    public Tensor prod(int[] axis, boolean keepDimensions) {
+        return JNum.prod(this, axis, keepDimensions);
+    }
+
+    /**
+     * In order to know where to put brackets, we look at the shape array in reverse.
+     * Before every element of index divisible with "shape[n-1]" we append "]\n["
+     * Before every element of index divisible with "shape[n-1] * shape[n-2]" we append "]]\n[[" and so on, except for shape[0]
+     */
+    @Override
+    public String toString() {
+        StringBuilder result = new StringBuilder();
+        result.append("Tensor{" + "shape=").append(Arrays.toString(shape.toArray())).append('}').append(System.lineSeparator());
+        StringBuilder ending = new StringBuilder();
+        for (int i = 0; i < shape.size(); i++) {
+            result.append("[");
+            ending.append("]");
+        }
+        List<Integer> bracketsPositions = new ArrayList<>();
+        if (shape.size() > 1) {
+            bracketsPositions.add(shape.get(shape.size() - 1));
+        }
+        for (int i = shape.size() - 2; i >= 1; i--) {
+            bracketsPositions.add(shape.get(i) * shape.get(i + 1));
+        }
+        for (int i = 0; i < internalIndexingTable.length; i++) {
+            int countBrackets = 0;
+            for (Integer bracketsPosition : bracketsPositions) {
+                if (i > 0 && i % bracketsPosition == 0) {
+                    countBrackets++;
+                }
+            }
+            if (countBrackets > 0) {
+                result.append("]".repeat(countBrackets));
+                result.append(System.lineSeparator());
+                result.append("[".repeat(countBrackets));
+            }
+            result.append(" ").append(getFromInternalArray(i)).append(" ");
+        }
+        return result.append(ending.toString()).toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Tensor tensor = (Tensor) o;
+        if (!Arrays.equals(getShape(), tensor.getShape())) {
+            return false;
+        }
+
+        for (int i = 0; i < internalIndexingTable.length; i++) {
+            if (!getFromInternalArray(i).equals(tensor.getFromInternalArray(i))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public Tensor clone() {
+        Tensor tensor = new Tensor();
+        tensor.shape = new ArrayList<>(this.shape.size());
+        tensor.shape.addAll(this.shape);
+        tensor.strides = new ArrayList<>(this.strides.size());
+        tensor.strides.addAll(this.strides);
+        if (this.internalArray != null) {
+            tensor.internalArray = Arrays.copyOf(this.internalArray, this.internalArray.length);
+        }
+        if (this.internalIndexingTable != null) {
+            tensor.internalIndexingTable = Arrays.copyOf(this.internalIndexingTable, this.internalIndexingTable.length);
+        }
+        tensor.isView = isView;
+        tensor.dataType = this.dataType;
+        tensor.numberOfElements = this.numberOfElements;
+        return tensor;
+    }
+
+    public int[] getShape() {
+        return shape.stream().mapToInt(i -> i).toArray();
+    }
+
+    public int[] getStrides() {
+        return strides.stream().mapToInt(i -> i).toArray();
+    }
+
+    public boolean isView() {
+        return isView;
+    }
+
+    public Tensor getBase() {
+        return this.base;
+    }
+
+    public JNumDataType getDataType() {
+        return dataType;
+    }
+
+    Tensor(JNumDataType dataType, int[] shape, Function<JNumDataType, Number> defaultValueGenerator) {
+        this.shape = Arrays.stream(shape).boxed().collect(Collectors.toList());
+        this.dataType = dataType;
+        buildStrides();
+        int numberOfElements = this.shape.stream().reduce(1, (i, j) -> i * j);
+        buildDefaultInternalArray(numberOfElements, defaultValueGenerator);
+        buildInternalIndexingTable();
+        isView = false;
+        base = null;
+    }
+
+    List<Integer> getShapeList() {
+        return this.shape;
+    }
+
+    List<Integer> getStridesList() {
+        return this.strides;
+    }
+
+    void setStrides(List<Integer> strides) {
+        this.strides = strides;
+    }
+
+    void setShape(List<Integer> shape) {
+        this.shape = shape;
+    }
+
+    int[] getInternalIndexingTable() {
+        return internalIndexingTable;
+    }
+
+    int getInternalIndexingTableSize() {
+        return internalIndexingTable.length;
+    }
+
+    Number getFromInternalArray(int index) {
+        if (isView) {
+            if (base.isView) {
+                return base.getFromInternalArray(index);
+            }
+            return base.internalArray[internalIndexingTable[index]];
+        }
+        return internalArray[internalIndexingTable[index]];
+    }
+
+    int getTranslatedIndex(int index) {
+        if (isView) {
+            if (base.isView) {
+                return base.getTranslatedIndex(index);
+            }
+            return base.internalIndexingTable[index];
+        }
+        return internalIndexingTable[index];
+    }
+
+    void setInInternalArray(int index, Number value) {
+        if (isView) {
+            if (base.isView) {
+                base.setInInternalArray(index, value);
+            } else {
+                base.internalArray[index] = value;
+            }
+        } else {
+            internalArray[index] = value;
+        }
+    }
+
+    int getInternalArraySize() {
+        if (isView) {
+            if (base.isView) {
+                return base.getInternalArraySize();
+            }
+            return base.internalArray.length;
+        }
+        return internalArray.length;
+    }
+
+    void setInternalIndexingTable(int[] internalIndexingTable) {
+        this.internalIndexingTable = internalIndexingTable;
+    }
+
+    void setBase(Tensor base) {
+        this.base = base;
+    }
+
+    private int computeIndex(List<Integer> shape, List<Integer> strides, int... index) {
+        if (index == null || index.length == 0) {
+            throw new IllegalArgumentException("Cannot return value for null indices");
+        }
+        int result = 0;
+        if (shape.size() > 0) {
+            for (int i = 0; i < index.length; i++) {
+                if (index[i] < 0 || index[i] >= shape.get(i)) {
+                    throw new IllegalArgumentException(String.format("Cannot find index %s in tensor of shape %s", Arrays.toString(index), Arrays.toString(shape.toArray())));
+                }
+                result += index[i] * strides.get(i);
+            }
+        }
+        return internalIndexingTable[result];
+    }
+
+    /**
+     * Because we don't know in advance how many dimensions the input data will have, we need to go recursively
+     * until the element is not an array anymore.
+     * We are also checking whether the array is homogeneous - all arrays in a dimension need to have the same length
+     */
+    private void buildShape(Object data) {
+        if (data != null && data.getClass().isArray()) {
+            int length = Array.getLength(data);
+            shape.add(length);
+            Object nextDimension = Array.get(data, 0);
+            if (nextDimension.getClass().isArray() && length > 1) {
+                int elementLength = Array.getLength(Array.get(data, 0));
+                for (int i = 1; i < length; i++) {
+                    Object element = Array.get(data, i);
+                    if (Array.getLength(element) != elementLength) {
+                        throw new IllegalArgumentException("All arrays passed to JNum Tensors need to be homogeneous shape");
+                    }
+                }
+            }
+            buildShape(nextDimension);
+        }
+    }
+
+    private void buildStrides() {
+        int currentStride = 1;
+        for (int i = shape.size() - 1; i >= 0; i--) {
+            strides.add(currentStride);
+            currentStride *= this.shape.get(i);
+        }
+        Collections.reverse(strides);
+    }
+
+    private void buildInternalArray(Object object) {
+        if (object != null && object.getClass().isArray()) {
+            int length = Array.getLength(object);
+            for (int i = 0; i < length; i++) {
+                Object arrayElement = Array.get(object, i);
+                buildInternalArray(arrayElement);
+            }
+        } else {
+            internalArray[numberOfElements] = (Number) object;
+            numberOfElements++;
+        }
+    }
+
+    private void buildDefaultInternalArray(int numberOfElements, Function<JNumDataType, Number> valueGenerator) {
+        internalArray = new Number[numberOfElements];
+        for (int i = 0; i < numberOfElements; i++) {
+            internalArray[i] = valueGenerator.apply(dataType);
+        }
+    }
+
+    private void buildInternalIndexingTable() {
+        internalIndexingTable = new int[internalArray.length];
+        for (int i = 0; i < internalArray.length; i++) {
+            internalIndexingTable[i] = i;
+        }
+    }
+
+    private Number getValue(int... index) {
+        if (isView) {
+            if (base.isView) {
+                return base.getValue(index);
+            }
+            return base.internalArray[computeIndex(shape, strides, index)];
+        }
+        return internalArray[computeIndex(shape, strides, index)];
+    }
+
+    private void setValue(Number value, int... index) {
+        if (isView) {
+            base.setValue(value, index);
+        } else {
+            internalArray[computeIndex(shape, strides, index)] = value;
+        }
+    }
+
+    private Tensor() {
+        // Empty constructor needed for clone()
+    }
+
+}
