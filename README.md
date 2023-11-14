@@ -3,7 +3,7 @@
 ![](https://img.shields.io/badge/version-0.0.1-blue) 
 ![](https://img.shields.io/badge/accepting_contributions-not_yet-red) 
 ![](https://img.shields.io/badge/license-MIT-violet)
-<a href="www.linkedin.com/in/marius-borcan-999806107">![](https://img.shields.io/badge/LinkedIn-blue?style=flat&logo=linkedin&labelColor=blue)</a>
+<a href="https://www.linkedin.com/in/marius-borcan-999806107">![](https://img.shields.io/badge/LinkedIn-blue?style=flat&logo=linkedin&labelColor=blue)</a>
 <a href="https://twitter.com/b_dmarius">![](https://img.shields.io/badge/Twitter-white?style=flat&logo=twitter&labelColor=white)</a>
  
 A Java library for N-Dimensional arrays called Tensors.
@@ -69,7 +69,7 @@ N-Dimensional arrays are needed.
 
 ## Contribution
 This project does not accept PRs yet. If you have any ideas about contributing to this project, please get in touch 
-with me via [LinkedIn](www.linkedin.com/in/marius-borcan-999806107) or [Twitter](https://twitter.com/b_dmarius). 
+with me via [LinkedIn](https://www.linkedin.com/in/marius-borcan-999806107) or [Twitter](https://twitter.com/b_dmarius). 
 
 ## Examples
 
