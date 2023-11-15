@@ -63,6 +63,7 @@ open-sourced soon. More details will appear here. Nonetheless, this project can 
 N-Dimensional arrays are needed.
 
 ## Setup instructions
+Download the jar file from the releases section, or:
 1. Clone the project from Github. 
 2. Execute mvn package in your preferred way (via your IDE or Terminal).
 2. Find the generated jar file in the /target folder and import it in your project.
