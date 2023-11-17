@@ -314,6 +314,10 @@ public final class Tensor {
         return JNDArray.any(this, function);
     }
 
+    public Tensor where(Function<Number, Number> function) {
+        return JNDArray.where(this, function);
+    }
+
     /**
      * In order to know where to put brackets, we look at the shape array in reverse.
      * Before every element of index divisible with "shape[n-1]" we append "]\n["

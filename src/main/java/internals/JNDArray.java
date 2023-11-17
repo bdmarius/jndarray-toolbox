@@ -241,4 +241,8 @@ public class JNDArray {
         return TensorLogicFunctions.any(tensor, function);
     }
 
+    public static Tensor where(Tensor tensor, Function<Number, Number> function) {
+        return TensorWhereFunction.where(tensor, function);
+    }
+
 }
