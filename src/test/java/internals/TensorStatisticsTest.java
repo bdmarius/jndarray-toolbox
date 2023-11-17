@@ -54,7 +54,7 @@ public class TensorStatisticsTest {
     @Test
     public void test_Min_2D_View() {
         Tensor tensor = new Tensor(new int[]{3, 2, 1, 4, 5});
-        Tensor view = JNum.broadcast(tensor, new int[]{4, 5});
+        Tensor view = JNDArray.broadcast(tensor, new int[]{4, 5});
         Tensor expected = new Tensor(1);
         assertEquals(expected, view.min());
     }
@@ -104,7 +104,7 @@ public class TensorStatisticsTest {
     @Test
     public void test_Max_2D_View() {
         Tensor tensor = new Tensor(new int[]{3, 2, 1, 4, 5});
-        Tensor view = JNum.broadcast(tensor, new int[]{4, 5});
+        Tensor view = JNDArray.broadcast(tensor, new int[]{4, 5});
         Tensor expected = new Tensor(5);
         assertEquals(expected, view.max());
     }
@@ -550,7 +550,7 @@ public class TensorStatisticsTest {
     @Test
     public void test_ArgMin_2D_View() {
         Tensor tensor = new Tensor(new int[]{3, 2, 1, 4, 5});
-        Tensor view = JNum.broadcast(tensor, new int[]{4, 5});
+        Tensor view = JNDArray.broadcast(tensor, new int[]{4, 5});
         Tensor expected = new Tensor(2);
         assertEquals(expected, view.argMin());
     }
@@ -600,7 +600,7 @@ public class TensorStatisticsTest {
     @Test
     public void test_ArgMax_2D_View() {
         Tensor tensor = new Tensor(new int[]{3, 2, 1, 4, 5});
-        Tensor view = JNum.broadcast(tensor, new int[]{4, 5});
+        Tensor view = JNDArray.broadcast(tensor, new int[]{4, 5});
         Tensor expected = new Tensor(4);
         assertEquals(expected, view.argMax());
     }

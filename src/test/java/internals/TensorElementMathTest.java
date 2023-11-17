@@ -12,7 +12,7 @@ public class TensorElementMathTest {
     @Test
     public void test_Minus_With_View() {
         Tensor tensor = new Tensor(new int[]{1, 2, 3, 4, 5});
-        Tensor tensor2 = JNum.broadcast(tensor, new int[]{4, 5});
+        Tensor tensor2 = JNDArray.broadcast(tensor, new int[]{4, 5});
         Tensor expectedResult = new Tensor(new int[][]{
                 new int[]{-1, -2, -3, -4, -5},
                 new int[]{-1, -2, -3, -4, -5},
@@ -25,7 +25,7 @@ public class TensorElementMathTest {
     @Test
     public void test_Clip_With_View() {
         Tensor tensor = new Tensor(new int[]{1, 2, 3, 4, 5});
-        Tensor tensor2 = JNum.broadcast(tensor, new int[]{4, 5});
+        Tensor tensor2 = JNDArray.broadcast(tensor, new int[]{4, 5});
         Tensor expectedResult = new Tensor(new int[][]{
                 new int[]{2, 2, 3, 4, 4},
                 new int[]{2, 2, 3, 4, 4},
@@ -41,7 +41,7 @@ public class TensorElementMathTest {
                 new int[] {1, 2, 3},
                 new int[] {4, 5, 6}
         });
-        Tensor actual = JNum.powerOf(tensor, 2);
+        Tensor actual = JNDArray.powerOf(tensor, 2);
         Tensor expected = new Tensor(new double[][] {
                 new double[] {1.0, 4.0, 9.0},
                 new double[] {16.0, 25.0, 36.0}
@@ -56,7 +56,7 @@ public class TensorElementMathTest {
                 new int[] {1, 2, 3},
                 new int[] {4, 5, 6}
         });
-        Tensor actual = JNum.log(tensor);
+        Tensor actual = JNDArray.log(tensor);
         Tensor expected = new Tensor(new double[][] {
                 new double[] {0.0, 0.6931471805599453, 1.0986122886681098},
                 new double[] {1.3862943611198906, 1.6094379124341003, 1.791759469228055}
@@ -71,7 +71,7 @@ public class TensorElementMathTest {
                 new int[] {1, 2, 3},
                 new int[] {4, 5, 6}
         });
-        Tensor actual = JNum.exp(tensor);
+        Tensor actual = JNDArray.exp(tensor);
         Tensor expected = new Tensor(new double[][] {
                 new double[] {2.718281828459045, 7.3890560989306495, 20.085536923187664},
                 new double[] {54.59815003314423, 148.41315910257657, 403.428793492735}
@@ -86,7 +86,7 @@ public class TensorElementMathTest {
                 new int[] {1, 2, 3},
                 new int[] {4, 5, 6}
         });
-        Tensor actual = JNum.sqrt(tensor);
+        Tensor actual = JNDArray.sqrt(tensor);
         Tensor expected = new Tensor(new double[][] {
                 new double[] {1.0, 1.4142135623730951, 1.7320508075688772},
                 new double[] {2.0, 2.23606797749979, 2.449489742783178}
@@ -101,7 +101,7 @@ public class TensorElementMathTest {
                 new int[] {1, 2, 3},
                 new int[] {4, 5, 6}
         });
-        Tensor actual = JNum.minus(tensor);
+        Tensor actual = JNDArray.minus(tensor);
         Tensor expected = new Tensor(new int[][] {
                 new int[] {-1, -2, -3},
                 new int[] {-4, -5, -6}
@@ -116,7 +116,7 @@ public class TensorElementMathTest {
                 new int[] {1, 2, 3},
                 new int[] {4, 5, 6}
         });
-        Tensor actual = JNum.min(tensor, 3);
+        Tensor actual = JNDArray.min(tensor, 3);
         Tensor expected = new Tensor(new int[][] {
                 new int[] {1, 2, 3},
                 new int[] {3, 3, 3}
@@ -131,7 +131,7 @@ public class TensorElementMathTest {
                 new int[] {1, 2, 3},
                 new int[] {4, 5, 6}
         });
-        Tensor actual = JNum.max(tensor, 3);
+        Tensor actual = JNDArray.max(tensor, 3);
         Tensor expected = new Tensor(new int[][] {
                 new int[] {3, 3, 3},
                 new int[] {4, 5, 6}
@@ -146,7 +146,7 @@ public class TensorElementMathTest {
                 new int[] {1, 2, 3},
                 new int[] {4, 5, 6}
         });
-        Tensor actual = JNum.clip(tensor, 2, 4);
+        Tensor actual = JNDArray.clip(tensor, 2, 4);
         Tensor expected = new Tensor(new int[][] {
                 new int[] {2, 2, 3},
                 new int[] {4, 4, 4}

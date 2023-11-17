@@ -1,4 +1,4 @@
-# jnum-arrays
+# jndarray-toolbox
 
 ![](https://img.shields.io/badge/version-0.0.1-blue) 
 ![](https://img.shields.io/badge/accepting_contributions-not_yet-red) 

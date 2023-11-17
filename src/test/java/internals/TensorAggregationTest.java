@@ -54,7 +54,7 @@ public class TensorAggregationTest {
     @Test
     public void test_Sum_2D_View() {
         Tensor tensor = new Tensor(new int[]{3, 2, 1, 4, 5});
-        Tensor view = JNum.broadcast(tensor, new int[]{4, 5});
+        Tensor view = JNDArray.broadcast(tensor, new int[]{4, 5});
         Tensor expected = new Tensor(60);
         assertEquals(expected, view.sum());
     }
@@ -289,7 +289,7 @@ public class TensorAggregationTest {
     @Test
     public void test_Prod_2D_View() {
         Tensor tensor = new Tensor(new int[]{3, 2, 1, 4, 5});
-        Tensor view = JNum.broadcast(tensor, new int[]{4, 5});
+        Tensor view = JNDArray.broadcast(tensor, new int[]{4, 5});
         Tensor expected = new Tensor(207360000);
         assertEquals(expected, view.prod());
     }

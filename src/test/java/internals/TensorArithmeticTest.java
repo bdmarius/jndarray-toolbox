@@ -12,7 +12,7 @@ public class TensorArithmeticTest {
     @Test
     public void test_First_Broadcast_Then_Arithmetic() {
         Tensor tensor = new Tensor(new int[]{1, 2, 3, 4, 5});
-        Tensor view = JNum.broadcast(tensor, new int[]{4, 5});
+        Tensor view = JNDArray.broadcast(tensor, new int[]{4, 5});
         Tensor tensor2 = new Tensor(new int[]{1, 1, 1, 1, 1});
         Tensor actualResult = view.add(tensor2);
         Tensor expectedResult = new Tensor(new int[][]{
@@ -29,35 +29,35 @@ public class TensorArithmeticTest {
         Tensor a = new Tensor(10d);
         Tensor b = new Tensor(5d);
 
-        Tensor actual = JNum.add(a, b);
+        Tensor actual = JNDArray.add(a, b);
         Tensor expected = new Tensor(15d);
         assertEquals(expected, actual);
 
-        actual = JNum.add(b, a);
+        actual = JNDArray.add(b, a);
         expected = new Tensor(15d);
         assertEquals(expected, actual);
 
-        actual = JNum.subtract(a, b);
+        actual = JNDArray.subtract(a, b);
         expected = new Tensor(5d);
         assertEquals(expected, actual);
 
-        actual = JNum.subtract(b, a);
+        actual = JNDArray.subtract(b, a);
         expected = new Tensor(-5d);
         assertEquals(expected, actual);
 
-        actual = JNum.multiply(a, b);
+        actual = JNDArray.multiply(a, b);
         expected = new Tensor(50d);
         assertEquals(expected, actual);
 
-        actual = JNum.multiply(b, a);
+        actual = JNDArray.multiply(b, a);
         expected = new Tensor(50d);
         assertEquals(expected, actual);
 
-        actual = JNum.divide(a, b);
+        actual = JNDArray.divide(a, b);
         expected = new Tensor(2d);
         assertEquals(expected, actual);
 
-        actual = JNum.divide(b, a);
+        actual = JNDArray.divide(b, a);
         expected = new Tensor(0.5);
         assertEquals(expected, actual);
     }
@@ -67,35 +67,35 @@ public class TensorArithmeticTest {
         Tensor a = new Tensor(10d);
         Tensor b = new Tensor(new double[] {5, 5, 5});
 
-        Tensor actual = JNum.add(a, b);
+        Tensor actual = JNDArray.add(a, b);
         Tensor expected = new Tensor(new double[] {15, 15, 15});
         assertEquals(expected, actual);
 
-        actual = JNum.add(b, a);
+        actual = JNDArray.add(b, a);
         expected = new Tensor(new double[] {15, 15, 15});
         assertEquals(expected, actual);
 
-        actual  = JNum.subtract(a, b);
+        actual  = JNDArray.subtract(a, b);
         expected = new Tensor(new double[] {5, 5, 5});
         assertEquals(expected, actual);
 
-        actual  = JNum.subtract(b, a);
+        actual  = JNDArray.subtract(b, a);
         expected = new Tensor(new double[] {-5, -5, -5});
         assertEquals(expected, actual);
 
-        actual = JNum.multiply(a, b);
+        actual = JNDArray.multiply(a, b);
         expected = new Tensor(new double[] {50, 50, 50});
         assertEquals(expected, actual);
 
-        actual = JNum.multiply(b, a);
+        actual = JNDArray.multiply(b, a);
         expected = new Tensor(new double[] {50, 50, 50});
         assertEquals(expected, actual);
 
-        actual = JNum.divide(a, b);
+        actual = JNDArray.divide(a, b);
         expected = new Tensor(new double[] {2, 2, 2});
         assertEquals(expected, actual);
 
-        actual = JNum.divide(b, a);
+        actual = JNDArray.divide(b, a);
         expected = new Tensor(new double[] {0.5, 0.5, 0.5});
         assertEquals(expected, actual);
     }
@@ -107,56 +107,56 @@ public class TensorArithmeticTest {
                 new double[] {5, 5, 5},
                 new double[] {5, 5, 5}
         });
-        Tensor actual = JNum.add(a, b);
+        Tensor actual = JNDArray.add(a, b);
         Tensor expected = new Tensor(new double[][] {
                 new double[] {15, 15, 15},
                 new double[] {15, 15, 15},
         });
         assertEquals(expected, actual);
 
-        actual = JNum.add(b, a);
+        actual = JNDArray.add(b, a);
         expected = new Tensor(new double[][] {
                 new double[] {15, 15, 15},
                 new double[] {15, 15, 15},
         });
         assertEquals(expected, actual);
 
-        actual = JNum.subtract(a, b);
+        actual = JNDArray.subtract(a, b);
         expected = new Tensor(new double[][] {
                 new double[] {5, 5, 5},
                 new double[] {5, 5, 5},
         });
         assertEquals(expected, actual);
 
-        actual = JNum.subtract(b, a);
+        actual = JNDArray.subtract(b, a);
         expected = new Tensor(new double[][] {
                 new double[] {-5, -5, -5},
                 new double[] {-5, -5, -5},
         });
         assertEquals(expected, actual);
 
-        actual = JNum.multiply(a, b);
+        actual = JNDArray.multiply(a, b);
         expected = new Tensor(new double[][] {
                 new double[] {50, 50, 50},
                 new double[] {50, 50, 50},
         });
         assertEquals(expected, actual);
 
-        actual = JNum.multiply(b, a);
+        actual = JNDArray.multiply(b, a);
         expected = new Tensor(new double[][] {
                 new double[] {50, 50, 50},
                 new double[] {50, 50, 50},
         });
         assertEquals(expected, actual);
 
-        actual = JNum.divide(a, b);
+        actual = JNDArray.divide(a, b);
         expected = new Tensor(new double[][] {
                 new double[] {2, 2, 2},
                 new double[] {2, 2, 2},
         });
         assertEquals(expected, actual);
 
-        actual = JNum.divide(b, a);
+        actual = JNDArray.divide(b, a);
         expected = new Tensor(new double[][] {
                 new double[] {0.5, 0.5, 0.5},
                 new double[] {0.5, 0.5, 0.5},
@@ -170,49 +170,49 @@ public class TensorArithmeticTest {
         Tensor b = new Tensor(new double[][] {
                 new double[] {5, 5, 5},
         });
-        Tensor actual = JNum.add(a, b);
+        Tensor actual = JNDArray.add(a, b);
         Tensor expected = new Tensor(new double[][] {
                 new double[] {15, 15, 15},
         });
         assertEquals(expected, actual);
 
-        actual = JNum.add(b, a);
+        actual = JNDArray.add(b, a);
         expected = new Tensor(new double[][] {
                 new double[] {15, 15, 15},
         });
         assertEquals(expected, actual);
 
-        actual = JNum.subtract(a, b);
+        actual = JNDArray.subtract(a, b);
         expected = new Tensor(new double[][] {
                 new double[] {5, 5, 5},
         });
         assertEquals(expected, actual);
 
-        actual = JNum.subtract(b, a);
+        actual = JNDArray.subtract(b, a);
         expected = new Tensor(new double[][] {
                 new double[] {-5, -5, -5},
         });
         assertEquals(expected, actual);
 
-        actual = JNum.multiply(a, b);
+        actual = JNDArray.multiply(a, b);
         expected = new Tensor(new double[][] {
                 new double[] {50, 50, 50},
         });
         assertEquals(expected, actual);
 
-        actual = JNum.multiply(b, a);
+        actual = JNDArray.multiply(b, a);
         expected = new Tensor(new double[][] {
                 new double[] {50, 50, 50},
         });
         assertEquals(expected, actual);
 
-        actual = JNum.divide(a, b);
+        actual = JNDArray.divide(a, b);
         expected = new Tensor(new double[][] {
                 new double[] {2, 2, 2},
         });
         assertEquals(expected, actual);
 
-        actual = JNum.divide(b, a);
+        actual = JNDArray.divide(b, a);
         expected = new Tensor(new double[][] {
                 new double[] {0.5, 0.5, 0.5},
         });
@@ -226,56 +226,56 @@ public class TensorArithmeticTest {
                 new double[] {5},
                 new double[] {5}
         });
-        Tensor actual = JNum.add(b, a);
+        Tensor actual = JNDArray.add(b, a);
         Tensor expected = new Tensor(new double[][] {
                 new double[] {15},
                 new double[] {15}
         });
         assertEquals(expected, actual);
 
-        actual = JNum.add(b, a);
+        actual = JNDArray.add(b, a);
         expected = new Tensor(new double[][] {
                 new double[] {15},
                 new double[] {15}
         });
         assertEquals(expected, actual);
 
-        actual = JNum.subtract(a, b);
+        actual = JNDArray.subtract(a, b);
         expected = new Tensor(new double[][] {
                 new double[] {5},
                 new double[] {5}
         });
         assertEquals(expected, actual);
 
-        actual = JNum.subtract(b, a);
+        actual = JNDArray.subtract(b, a);
         expected = new Tensor(new double[][] {
                 new double[] {-5},
                 new double[] {-5}
         });
         assertEquals(expected, actual);
 
-        actual = JNum.multiply(a, b);
+        actual = JNDArray.multiply(a, b);
         expected = new Tensor(new double[][] {
                 new double[] {50},
                 new double[] {50}
         });
         assertEquals(expected, actual);
 
-        actual = JNum.multiply(b, a);
+        actual = JNDArray.multiply(b, a);
         expected = new Tensor(new double[][] {
                 new double[] {50},
                 new double[] {50}
         });
         assertEquals(expected, actual);
 
-        actual = JNum.divide(a, b);
+        actual = JNDArray.divide(a, b);
         expected = new Tensor(new double[][] {
                 new double[] {2},
                 new double[] {2}
         });
         assertEquals(expected, actual);
 
-        actual = JNum.divide(b, a);
+        actual = JNDArray.divide(b, a);
         expected = new Tensor(new double[][] {
                 new double[] {0.5},
                 new double[] {0.5}
@@ -288,35 +288,35 @@ public class TensorArithmeticTest {
         Tensor a = new Tensor(new double[] {10, 20, 30});
         Tensor b = new Tensor(new double[] {5, 5, 5});
 
-        Tensor actual = JNum.add(a, b);
+        Tensor actual = JNDArray.add(a, b);
         Tensor expected = new Tensor(new double[] {15, 25, 35});
         assertEquals(expected, actual);
 
-        actual = JNum.add(b, a);
+        actual = JNDArray.add(b, a);
         expected = new Tensor(new double[] {15, 25, 35});
         assertEquals(expected, actual);
 
-        actual = JNum.subtract(a, b);
+        actual = JNDArray.subtract(a, b);
         expected = new Tensor(new double[] {5, 15, 25});
         assertEquals(expected, actual);
 
-        actual = JNum.subtract(b, a);
+        actual = JNDArray.subtract(b, a);
         expected = new Tensor(new double[] {-5, -15, -25});
         assertEquals(expected, actual);
 
-        actual = JNum.multiply(a, b);
+        actual = JNDArray.multiply(a, b);
         expected = new Tensor(new double[] {50, 100, 150});
         assertEquals(expected, actual);
 
-        actual = JNum.multiply(b, a);
+        actual = JNDArray.multiply(b, a);
         expected = new Tensor(new double[] {50, 100, 150});
         assertEquals(expected, actual);
 
-        actual = JNum.divide(a, b);
+        actual = JNDArray.divide(a, b);
         expected = new Tensor(new double[] {2, 4, 6});
         assertEquals(expected, actual);
 
-        actual = JNum.divide(b, a);
+        actual = JNDArray.divide(b, a);
         expected = new Tensor(new double[] {0.5, 0.25, 0.16666666666666666});
         assertEquals(expected, actual);
     }
@@ -331,7 +331,7 @@ public class TensorArithmeticTest {
                 new double[]{5, 5, 5},
         });
 
-        Tensor actual = JNum.add(a, b);
+        Tensor actual = JNDArray.add(a, b);
         Tensor expected = new Tensor(new double[][]{
                 new double[]{15, 25, 35},
                 new double[]{15, 25, 35},
@@ -339,7 +339,7 @@ public class TensorArithmeticTest {
         });
         assertEquals(expected, actual);
 
-        actual = JNum.add(b, a);
+        actual = JNDArray.add(b, a);
         expected = new Tensor(new double[][]{
                 new double[]{15, 25, 35},
                 new double[]{15, 25, 35},
@@ -347,7 +347,7 @@ public class TensorArithmeticTest {
         });
         assertEquals(expected, actual);
 
-        actual = JNum.subtract(a, b);
+        actual = JNDArray.subtract(a, b);
         expected = new Tensor(new double[][]{
                 new double[]{5, 15, 25},
                 new double[]{5, 15, 25},
@@ -355,7 +355,7 @@ public class TensorArithmeticTest {
         });
         assertEquals(expected, actual);
 
-        actual = JNum.subtract(b, a);
+        actual = JNDArray.subtract(b, a);
         expected = new Tensor(new double[][]{
                 new double[]{-5, -15, -25},
                 new double[]{-5, -15, -25},
@@ -363,7 +363,7 @@ public class TensorArithmeticTest {
         });
         assertEquals(expected, actual);
 
-        actual = JNum.multiply(a, b);
+        actual = JNDArray.multiply(a, b);
         expected = new Tensor(new double[][]{
                 new double[]{50, 100, 150},
                 new double[]{50, 100, 150},
@@ -371,7 +371,7 @@ public class TensorArithmeticTest {
         });
         assertEquals(expected, actual);
 
-        actual = JNum.multiply(b, a);
+        actual = JNDArray.multiply(b, a);
         expected = new Tensor(new double[][]{
                 new double[]{50, 100, 150},
                 new double[]{50, 100, 150},
@@ -379,7 +379,7 @@ public class TensorArithmeticTest {
         });
         assertEquals(expected, actual);
 
-        actual = JNum.divide(a, b);
+        actual = JNDArray.divide(a, b);
         expected = new Tensor(new double[][]{
                 new double[]{2, 4, 6},
                 new double[]{2, 4, 6},
@@ -387,7 +387,7 @@ public class TensorArithmeticTest {
         });
         assertEquals(expected, actual);
 
-        actual = JNum.divide(b, a);
+        actual = JNDArray.divide(b, a);
         expected = new Tensor(new double[][]{
                 new double[]{0.5, 0.25, 0.16666666666666666},
                 new double[]{0.5, 0.25, 0.16666666666666666},
@@ -403,49 +403,49 @@ public class TensorArithmeticTest {
                 new double[]{5, 5, 5},
         });
 
-        Tensor actual = JNum.add(a, b);
+        Tensor actual = JNDArray.add(a, b);
         Tensor expected = new Tensor(new double[][]{
                 new double[]{15, 25, 35},
         });
         assertEquals(expected, actual);
 
-        actual = JNum.add(b, a);
+        actual = JNDArray.add(b, a);
         expected = new Tensor(new double[][]{
                 new double[]{15, 25, 35},
         });
         assertEquals(expected, actual);
 
-        actual = JNum.subtract(a, b);
+        actual = JNDArray.subtract(a, b);
         expected = new Tensor(new double[][]{
                 new double[]{5, 15, 25},
         });
         assertEquals(expected, actual);
 
-        actual = JNum.subtract(b, a);
+        actual = JNDArray.subtract(b, a);
         expected = new Tensor(new double[][]{
                 new double[]{-5, -15, -25},
         });
         assertEquals(expected, actual);
 
-        actual = JNum.multiply(a, b);
+        actual = JNDArray.multiply(a, b);
         expected = new Tensor(new double[][]{
                 new double[]{50, 100, 150},
         });
         assertEquals(expected, actual);
 
-        actual = JNum.multiply(b, a);
+        actual = JNDArray.multiply(b, a);
         expected = new Tensor(new double[][]{
                 new double[]{50, 100, 150},
         });
         assertEquals(expected, actual);
 
-        actual = JNum.divide(a, b);
+        actual = JNDArray.divide(a, b);
         expected = new Tensor(new double[][]{
                 new double[]{2, 4, 6},
         });
         assertEquals(expected, actual);
 
-        actual = JNum.divide(b, a);
+        actual = JNDArray.divide(b, a);
         expected = new Tensor(new double[][]{
                 new double[]{0.5, 0.25, 0.16666666666666666},
         });
@@ -461,7 +461,7 @@ public class TensorArithmeticTest {
                 new double[]{15},
         });
 
-        Tensor actual = JNum.add(a, b);
+        Tensor actual = JNDArray.add(a, b);
         Tensor expected = new Tensor(new double[][]{
                 new double[]{15, 25, 35},
                 new double[]{20, 30, 40},
@@ -469,7 +469,7 @@ public class TensorArithmeticTest {
         });
         assertEquals(expected, actual);
 
-        actual = JNum.add(b, a);
+        actual = JNDArray.add(b, a);
         expected = new Tensor(new double[][]{
                 new double[]{15, 25, 35},
                 new double[]{20, 30, 40},
@@ -477,7 +477,7 @@ public class TensorArithmeticTest {
         });
         assertEquals(expected, actual);
 
-        actual = JNum.subtract(a, b);
+        actual = JNDArray.subtract(a, b);
         expected = new Tensor(new double[][]{
                 new double[]{5, 15, 25},
                 new double[]{0, 10, 20},
@@ -485,7 +485,7 @@ public class TensorArithmeticTest {
         });
         assertEquals(expected, actual);
 
-        actual = JNum.subtract(b, a);
+        actual = JNDArray.subtract(b, a);
         expected = new Tensor(new double[][]{
                 new double[]{-5, -15, -25},
                 new double[]{0, -10, -20},
@@ -493,7 +493,7 @@ public class TensorArithmeticTest {
         });
         assertEquals(expected, actual);
 
-        actual = JNum.multiply(a, b);
+        actual = JNDArray.multiply(a, b);
         expected = new Tensor(new double[][]{
                 new double[]{50, 100, 150},
                 new double[]{100, 200, 300},
@@ -501,7 +501,7 @@ public class TensorArithmeticTest {
         });
         assertEquals(expected, actual);
 
-        actual = JNum.multiply(b, a);
+        actual = JNDArray.multiply(b, a);
         expected = new Tensor(new double[][]{
                 new double[]{50, 100, 150},
                 new double[]{100, 200, 300},
@@ -509,7 +509,7 @@ public class TensorArithmeticTest {
         });
         assertEquals(expected, actual);
 
-        actual = JNum.divide(a, b);
+        actual = JNDArray.divide(a, b);
         expected = new Tensor(new double[][]{
                 new double[]{2, 4, 6},
                 new double[]{1, 2, 3},
@@ -517,7 +517,7 @@ public class TensorArithmeticTest {
         });
         assertEquals(expected, actual);
 
-        actual = JNum.divide(b, a);
+        actual = JNDArray.divide(b, a);
         expected = new Tensor(new double[][]{
                 new double[]{0.5, 0.25, 0.16666666666666666},
                 new double[]{1.0, 0.5, 0.3333333333333333},
@@ -537,56 +537,56 @@ public class TensorArithmeticTest {
                 new double[] {5, 5, 5}
         });
 
-        Tensor actual = JNum.add(a, b);
+        Tensor actual = JNDArray.add(a, b);
         Tensor expected = new Tensor(new double[][]{
                 new double[]{15, 25, 35},
                 new double[]{15, 25, 35},
         });
         assertEquals(expected, actual);
 
-        actual = JNum.add(b, a);
+        actual = JNDArray.add(b, a);
         expected = new Tensor(new double[][]{
                 new double[]{15, 25, 35},
                 new double[]{15, 25, 35},
         });
         assertEquals(expected, actual);
 
-        actual = JNum.subtract(a, b);
+        actual = JNDArray.subtract(a, b);
         expected = new Tensor(new double[][]{
                 new double[]{5, 15, 25},
                 new double[]{5, 15, 25},
         });
         assertEquals(expected, actual);
 
-        actual = JNum.subtract(b, a);
+        actual = JNDArray.subtract(b, a);
         expected = new Tensor(new double[][]{
                 new double[]{-5, -15, -25},
                 new double[]{-5, -15, -25},
         });
         assertEquals(expected, actual);
 
-        actual = JNum.multiply(a, b);
+        actual = JNDArray.multiply(a, b);
         expected = new Tensor(new double[][]{
                 new double[]{50, 100, 150},
                 new double[]{50, 100, 150},
         });
         assertEquals(expected, actual);
 
-        actual = JNum.multiply(b, a);
+        actual = JNDArray.multiply(b, a);
         expected = new Tensor(new double[][]{
                 new double[]{50, 100, 150},
                 new double[]{50, 100, 150},
         });
         assertEquals(expected, actual);
 
-        actual = JNum.divide(a, b);
+        actual = JNDArray.divide(a, b);
         expected = new Tensor(new double[][]{
                 new double[]{2, 4, 6},
                 new double[]{2, 4, 6},
         });
         assertEquals(expected, actual);
 
-        actual = JNum.divide(b, a);
+        actual = JNDArray.divide(b, a);
         expected = new Tensor(new double[][]{
                 new double[]{0.5, 0.25, 0.16666666666666666},
                 new double[]{0.5, 0.25, 0.16666666666666666},
@@ -605,56 +605,56 @@ public class TensorArithmeticTest {
 
         });
 
-        Tensor actual = JNum.add(a, b);
+        Tensor actual = JNDArray.add(a, b);
         Tensor expected = new Tensor(new double[][]{
                 new double[]{15, 25, 35},
                 new double[]{15, 25, 35},
         });
         assertEquals(expected, actual);
 
-        actual = JNum.add(b, a);
+        actual = JNDArray.add(b, a);
         expected = new Tensor(new double[][]{
                 new double[]{15, 25, 35},
                 new double[]{15, 25, 35},
         });
         assertEquals(expected, actual);
 
-        actual = JNum.subtract(a, b);
+        actual = JNDArray.subtract(a, b);
         expected = new Tensor(new double[][]{
                 new double[]{5, 15, 25},
                 new double[]{5, 15, 25},
         });
         assertEquals(expected, actual);
 
-        actual = JNum.subtract(b, a);
+        actual = JNDArray.subtract(b, a);
         expected = new Tensor(new double[][]{
                 new double[]{-5, -15, -25},
                 new double[]{-5, -15, -25},
         });
         assertEquals(expected, actual);
 
-        actual = JNum.multiply(a, b);
+        actual = JNDArray.multiply(a, b);
         expected = new Tensor(new double[][]{
                 new double[]{50, 100, 150},
                 new double[]{50, 100, 150},
         });
         assertEquals(expected, actual);
 
-        actual = JNum.multiply(b, a);
+        actual = JNDArray.multiply(b, a);
         expected = new Tensor(new double[][]{
                 new double[]{50, 100, 150},
                 new double[]{50, 100, 150},
         });
         assertEquals(expected, actual);
 
-        actual = JNum.divide(a, b);
+        actual = JNDArray.divide(a, b);
         expected = new Tensor(new double[][]{
                 new double[]{2, 4, 6},
                 new double[]{2, 4, 6},
         });
         assertEquals(expected, actual);
 
-        actual = JNum.divide(b, a);
+        actual = JNDArray.divide(b, a);
         expected = new Tensor(new double[][]{
                 new double[]{0.5, 0.25, 0.16666666666666666},
                 new double[]{0.5, 0.25, 0.16666666666666666},
@@ -673,56 +673,56 @@ public class TensorArithmeticTest {
                 new double[] {5}
         });
 
-        Tensor actual = JNum.add(a, b);
+        Tensor actual = JNDArray.add(a, b);
         Tensor expected = new Tensor(new double[][]{
                 new double[]{15, 25, 35},
                 new double[]{15, 25, 35},
         });
         assertEquals(expected, actual);
 
-        actual = JNum.add(b, a);
+        actual = JNDArray.add(b, a);
         expected = new Tensor(new double[][]{
                 new double[]{15, 25, 35},
                 new double[]{15, 25, 35},
         });
         assertEquals(expected, actual);
 
-        actual = JNum.subtract(a, b);
+        actual = JNDArray.subtract(a, b);
         expected = new Tensor(new double[][]{
                 new double[]{5, 15, 25},
                 new double[]{5, 15, 25},
         });
         assertEquals(expected, actual);
 
-        actual = JNum.subtract(b, a);
+        actual = JNDArray.subtract(b, a);
         expected = new Tensor(new double[][]{
                 new double[]{-5, -15, -25},
                 new double[]{-5, -15, -25},
         });
         assertEquals(expected, actual);
 
-        actual = JNum.multiply(a, b);
+        actual = JNDArray.multiply(a, b);
         expected = new Tensor(new double[][]{
                 new double[]{50, 100, 150},
                 new double[]{50, 100, 150},
         });
         assertEquals(expected, actual);
 
-        actual = JNum.multiply(b, a);
+        actual = JNDArray.multiply(b, a);
         expected = new Tensor(new double[][]{
                 new double[]{50, 100, 150},
                 new double[]{50, 100, 150},
         });
         assertEquals(expected, actual);
 
-        actual = JNum.divide(a, b);
+        actual = JNDArray.divide(a, b);
         expected = new Tensor(new double[][]{
                 new double[]{2, 4, 6},
                 new double[]{2, 4, 6},
         });
         assertEquals(expected, actual);
 
-        actual = JNum.divide(b, a);
+        actual = JNDArray.divide(b, a);
         expected = new Tensor(new double[][]{
                 new double[]{0.5, 0.25, 0.16666666666666666},
                 new double[]{0.5, 0.25, 0.16666666666666666},
@@ -739,49 +739,49 @@ public class TensorArithmeticTest {
                 new double[] {5, 5, 5}
         });
 
-        Tensor actual = JNum.add(a, b);
+        Tensor actual = JNDArray.add(a, b);
         Tensor expected = new Tensor(new double[][]  {
                 new double[] {15, 25, 35}
         });
         assertEquals(expected, actual);
 
-        actual = JNum.add(b, a);
+        actual = JNDArray.add(b, a);
         expected = new Tensor(new double[][]  {
                 new double[] {15, 25, 35}
         });
         assertEquals(expected, actual);
 
-        actual = JNum.subtract(a, b);
+        actual = JNDArray.subtract(a, b);
         expected = new Tensor(new double[][]  {
                 new double[] {5, 15, 25}
         });
         assertEquals(expected, actual);
 
-        actual = JNum.subtract(b, a);
+        actual = JNDArray.subtract(b, a);
         expected = new Tensor(new double[][]  {
                 new double[] {-5, -15, -25}
         });
         assertEquals(expected, actual);
 
-        actual = JNum.multiply(a, b);
+        actual = JNDArray.multiply(a, b);
         expected = new Tensor(new double[][]  {
                 new double[] {50, 100, 150}
         });
         assertEquals(expected, actual);
 
-        actual = JNum.multiply(b, a);
+        actual = JNDArray.multiply(b, a);
         expected = new Tensor(new double[][]  {
                 new double[] {50, 100, 150}
         });
         assertEquals(expected, actual);
 
-        actual = JNum.divide(a, b);
+        actual = JNDArray.divide(a, b);
         expected = new Tensor(new double[][]  {
                 new double[] {2, 4, 6}
         });
         assertEquals(expected, actual);
 
-        actual = JNum.divide(b, a);
+        actual = JNDArray.divide(b, a);
         expected = new Tensor(new double[][]  {
                 new double[] {0.5, 0.25, 0.16666666666666666}
         });
@@ -800,7 +800,7 @@ public class TensorArithmeticTest {
                 new double[]{15},
         });
 
-        Tensor actual = JNum.add(a, b);
+        Tensor actual = JNDArray.add(a, b);
         Tensor expected = new Tensor(new double[][]{
                 new double[]{15, 25, 35},
                 new double[]{20, 30, 40},
@@ -808,7 +808,7 @@ public class TensorArithmeticTest {
         });
         assertEquals(expected, actual);
 
-        actual = JNum.add(b, a);
+        actual = JNDArray.add(b, a);
         expected = new Tensor(new double[][]{
                 new double[]{15, 25, 35},
                 new double[]{20, 30, 40},
@@ -816,7 +816,7 @@ public class TensorArithmeticTest {
         });
         assertEquals(expected, actual);
 
-        actual = JNum.subtract(a, b);
+        actual = JNDArray.subtract(a, b);
         expected = new Tensor(new double[][]{
                 new double[]{5, 15, 25},
                 new double[]{0, 10, 20},
@@ -824,7 +824,7 @@ public class TensorArithmeticTest {
         });
         assertEquals(expected, actual);
 
-        actual = JNum.subtract(b, a);
+        actual = JNDArray.subtract(b, a);
         expected = new Tensor(new double[][]{
                 new double[]{-5, -15, -25},
                 new double[]{0, -10, -20},
@@ -832,7 +832,7 @@ public class TensorArithmeticTest {
         });
         assertEquals(expected, actual);
 
-        actual = JNum.multiply(a, b);
+        actual = JNDArray.multiply(a, b);
         expected = new Tensor(new double[][]{
                 new double[]{50, 100, 150},
                 new double[]{100, 200, 300},
@@ -840,7 +840,7 @@ public class TensorArithmeticTest {
         });
         assertEquals(expected, actual);
 
-        actual = JNum.multiply(b, a);
+        actual = JNDArray.multiply(b, a);
         expected = new Tensor(new double[][]{
                 new double[]{50, 100, 150},
                 new double[]{100, 200, 300},
@@ -848,7 +848,7 @@ public class TensorArithmeticTest {
         });
         assertEquals(expected, actual);
 
-        actual = JNum.divide(a, b);
+        actual = JNDArray.divide(a, b);
         expected = new Tensor(new double[][]{
                 new double[]{2, 4, 6},
                 new double[]{1, 2, 3},
@@ -856,7 +856,7 @@ public class TensorArithmeticTest {
         });
         assertEquals(expected, actual);
 
-        actual = JNum.divide(b, a);
+        actual = JNDArray.divide(b, a);
         expected = new Tensor(new double[][]{
                 new double[]{0.5, 0.25, 0.16666666666666666},
                 new double[]{1.0, 0.5, 0.3333333333333333},
@@ -879,7 +879,7 @@ public class TensorArithmeticTest {
                 new double[] {5},
         });
 
-        Tensor actual = JNum.add(a, b);
+        Tensor actual = JNDArray.add(a, b);
         Tensor expected = new Tensor(new double[][]  {
                 new double[] {15},
                 new double[] {25},
@@ -887,7 +887,7 @@ public class TensorArithmeticTest {
         });
         assertEquals(expected, actual);
 
-        actual = JNum.add(b, a);
+        actual = JNDArray.add(b, a);
         expected = new Tensor(new double[][]  {
                 new double[] {15},
                 new double[] {25},
@@ -895,7 +895,7 @@ public class TensorArithmeticTest {
         });
         assertEquals(expected, actual);
 
-        actual = JNum.subtract(a, b);
+        actual = JNDArray.subtract(a, b);
         expected = new Tensor(new double[][]  {
                 new double[] {5},
                 new double[] {15},
@@ -903,7 +903,7 @@ public class TensorArithmeticTest {
         });
         assertEquals(expected, actual);
 
-        actual = JNum.subtract(b, a);
+        actual = JNDArray.subtract(b, a);
         expected = new Tensor(new double[][]  {
                 new double[] {-5},
                 new double[] {-15},
@@ -911,7 +911,7 @@ public class TensorArithmeticTest {
         });
         assertEquals(expected, actual);
 
-        actual = JNum.multiply(a, b);
+        actual = JNDArray.multiply(a, b);
         expected = new Tensor(new double[][]  {
                 new double[] {50},
                 new double[] {100},
@@ -919,7 +919,7 @@ public class TensorArithmeticTest {
         });
         assertEquals(expected, actual);
 
-        actual = JNum.multiply(b, a);
+        actual = JNDArray.multiply(b, a);
         expected = new Tensor(new double[][]  {
                 new double[] {50},
                 new double[] {100},
@@ -927,7 +927,7 @@ public class TensorArithmeticTest {
         });
         assertEquals(expected, actual);
 
-        actual = JNum.divide(a, b);
+        actual = JNDArray.divide(a, b);
         expected = new Tensor(new double[][]  {
                 new double[] {2},
                 new double[] {4},
@@ -935,7 +935,7 @@ public class TensorArithmeticTest {
         });
         assertEquals(expected, actual);
 
-        actual = JNum.divide(b, a);
+        actual = JNDArray.divide(b, a);
         expected = new Tensor(new double[][]  {
                 new double[] {0.5},
                 new double[] {0.25},

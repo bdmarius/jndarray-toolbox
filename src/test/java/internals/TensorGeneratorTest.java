@@ -16,7 +16,7 @@ public class TensorGeneratorTest {
                 {0, 0, 0, 0},
                 {0, 0, 0, 0},
         });
-        assertEquals(expected, JNum.zeroes(JNumDataType.INT, new int[]{3, 4}));
+        assertEquals(expected, JNDArray.zeroes(JNumDataType.INT, new int[]{3, 4}));
     }
 
     @Test
@@ -26,6 +26,6 @@ public class TensorGeneratorTest {
                 {1, 1, 1, 1},
                 {1, 1, 1, 1},
         });
-        assertEquals(expected, JNum.ones(JNumDataType.INT, new int[]{3, 4}));
+        assertEquals(expected, JNDArray.ones(JNumDataType.INT, new int[]{3, 4}));
     }
 }

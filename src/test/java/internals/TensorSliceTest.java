@@ -12,7 +12,7 @@ public class TensorSliceTest {
     @Test
     public void testSlice_View() {
         Tensor tensor = new Tensor(new int[][]{new int[]{1, 2, 3, 4, 5}});
-        Tensor view = JNum.broadcast(tensor, new int[]{4, 5});
+        Tensor view = JNDArray.broadcast(tensor, new int[]{4, 5});
         Tensor expectedResult = new Tensor(new int[][]{
                 new int[]{2, 3, 4},
                 new int[]{2, 3, 4}

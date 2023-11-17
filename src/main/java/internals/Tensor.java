@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -89,199 +90,231 @@ public final class Tensor {
     }
 
     public Tensor transposed() {
-        return JNum.transpose(this);
+        return JNDArray.transpose(this);
     }
 
     public Tensor reshape(int[] newShape) {
-        return JNum.reshape(this, newShape);
+        return JNDArray.reshape(this, newShape);
     }
 
     public Tensor broadcast(int[] newShape) {
-        return JNum.broadcast(this, newShape);
+        return JNDArray.broadcast(this, newShape);
     }
 
     public Tensor add(Tensor tensor) {
-        return JNum.add(this, tensor);
+        return JNDArray.add(this, tensor);
     }
 
     public Tensor subtract(Tensor tensor) {
-        return JNum.subtract(this, tensor);
+        return JNDArray.subtract(this, tensor);
     }
 
     public Tensor multiply(Tensor tensor) {
-        return JNum.multiply(this, tensor);
+        return JNDArray.multiply(this, tensor);
     }
 
     public Tensor divide(Tensor tensor) {
-        return JNum.divide(this, tensor);
+        return JNDArray.divide(this, tensor);
     }
 
     public Tensor powerOf(Number value) {
-        return JNum.powerOf(this, value);
+        return JNDArray.powerOf(this, value);
     }
 
     public Tensor log() {
-        return JNum.log(this);
+        return JNDArray.log(this);
     }
 
     public Tensor exp() {
-        return JNum.exp(this);
+        return JNDArray.exp(this);
     }
 
     public Tensor sqrt() {
-        return JNum.sqrt(this);
+        return JNDArray.sqrt(this);
     }
 
     public Tensor minus() {
-        return JNum.minus(this);
+        return JNDArray.minus(this);
     }
 
     public Tensor min(Number value) {
-        return JNum.min(this, value);
+        return JNDArray.min(this, value);
     }
 
     public Tensor max(Number value) {
-        return JNum.max(this, value);
+        return JNDArray.max(this, value);
     }
 
     public Tensor clip(Number firstValue, Number secondValue) {
-        return JNum.clip(this, firstValue, secondValue);
+        return JNDArray.clip(this, firstValue, secondValue);
     }
 
     public Tensor slice(int[][] limits) {
-        return JNum.slice(this, limits);
+        return JNDArray.slice(this, limits);
     }
 
     public Tensor dot(Tensor secondTensor) {
-        return JNum.dot(this, secondTensor);
+        return JNDArray.dot(this, secondTensor);
     }
 
     public Tensor min() {
-        return JNum.min(this);
+        return JNDArray.min(this);
     }
 
     public Tensor min(boolean keepDimensions) {
-        return JNum.min(this, keepDimensions);
+        return JNDArray.min(this, keepDimensions);
     }
 
     public Tensor min(int[] axis) {
-        return JNum.min(this, axis);
+        return JNDArray.min(this, axis);
     }
 
     public Tensor min(int[] axis, boolean keepDimensions) {
-        return JNum.min(this, axis, keepDimensions);
+        return JNDArray.min(this, axis, keepDimensions);
     }
 
     public Tensor max() {
-        return JNum.max(this);
+        return JNDArray.max(this);
     }
 
     public Tensor max(boolean keepDimensions) {
-        return JNum.max(this, keepDimensions);
+        return JNDArray.max(this, keepDimensions);
     }
 
     public Tensor max(int[] axis) {
-        return JNum.max(this, axis);
+        return JNDArray.max(this, axis);
     }
 
     public Tensor max(int[] axis, boolean keepDimensions) {
-        return JNum.max(this, axis, keepDimensions);
+        return JNDArray.max(this, axis, keepDimensions);
     }
 
     public Tensor argMin() {
-        return JNum.argMin(this);
+        return JNDArray.argMin(this);
     }
 
     public Tensor argMin(boolean keepDimensions) {
-        return JNum.argMin(this, keepDimensions);
+        return JNDArray.argMin(this, keepDimensions);
     }
 
     public Tensor argMin(int axis) {
-        return JNum.argMin(this, axis);
+        return JNDArray.argMin(this, axis);
     }
 
     public Tensor argMin(int axis, boolean keepDimensions) {
-        return JNum.argMin(this, axis, keepDimensions);
+        return JNDArray.argMin(this, axis, keepDimensions);
     }
 
     public Tensor argMax() {
-        return JNum.argMax(this);
+        return JNDArray.argMax(this);
     }
 
     public Tensor argMax(boolean keepDimensions) {
-        return JNum.argMax(this, keepDimensions);
+        return JNDArray.argMax(this, keepDimensions);
     }
 
     public Tensor argMax(int axis) {
-        return JNum.argMax(this, axis);
+        return JNDArray.argMax(this, axis);
     }
 
     public Tensor argMax(int axis, boolean keepDimensions) {
-        return JNum.argMax(this, axis, keepDimensions);
+        return JNDArray.argMax(this, axis, keepDimensions);
     }
 
     public Tensor mean() {
-        return JNum.mean(this);
+        return JNDArray.mean(this);
     }
 
     public Tensor mean(boolean keepDimensions) {
-        return JNum.mean(this, keepDimensions);
+        return JNDArray.mean(this, keepDimensions);
     }
 
     public Tensor mean(int[] axis) {
-        return JNum.mean(this, axis);
+        return JNDArray.mean(this, axis);
     }
 
     public Tensor mean(int[] axis, boolean keepDimensions) {
-        return JNum.mean(this, axis, keepDimensions);
+        return JNDArray.mean(this, axis, keepDimensions);
     }
 
     public Tensor std() {
-        return JNum.std(this);
+        return JNDArray.std(this);
     }
 
     public Tensor std(boolean keepDimensions) {
-        return JNum.std(this, keepDimensions);
+        return JNDArray.std(this, keepDimensions);
     }
 
     public Tensor std(int[] axis) {
-        return JNum.std(this, axis);
+        return JNDArray.std(this, axis);
     }
 
     public Tensor std(int[] axis, boolean keepDimensions) {
-        return JNum.std(this, axis, keepDimensions);
+        return JNDArray.std(this, axis, keepDimensions);
     }
 
     public Tensor sum() {
-        return JNum.sum(this);
+        return JNDArray.sum(this);
     }
 
     public Tensor sum(boolean keepDimensions) {
-        return JNum.sum(this, keepDimensions);
+        return JNDArray.sum(this, keepDimensions);
     }
 
     public Tensor sum(int[] axis) {
-        return JNum.sum(this, axis);
+        return JNDArray.sum(this, axis);
     }
 
     public Tensor sum(int[] axis, boolean keepDimensions) {
-        return JNum.sum(this, axis, keepDimensions);
+        return JNDArray.sum(this, axis, keepDimensions);
     }
 
     public Tensor prod() {
-        return JNum.prod(this);
+        return JNDArray.prod(this);
     }
 
     public Tensor prod(boolean keepDimensions) {
-        return JNum.prod(this, keepDimensions);
+        return JNDArray.prod(this, keepDimensions);
     }
 
     public Tensor prod(int[] axis) {
-        return JNum.prod(this, axis);
+        return JNDArray.prod(this, axis);
     }
 
     public Tensor prod(int[] axis, boolean keepDimensions) {
-        return JNum.prod(this, axis, keepDimensions);
+        return JNDArray.prod(this, axis, keepDimensions);
+    }
+
+    public boolean lower(Number value) {
+        return JNDArray.lower(this, value);
+    }
+
+    public boolean lowerEquals(Number value) {
+        return JNDArray.lowerEquals(this, value);
+    }
+
+    public boolean greater(Number value) {
+        return JNDArray.greater(this, value);
+    }
+
+    public boolean greaterEquals(Number value) {
+        return JNDArray.greaterEquals(this, value);
+    }
+
+    public boolean equals(Number value) {
+        return JNDArray.equals(this, value);
+    }
+
+    public boolean notEquals(Number value) {
+        return JNDArray.notEquals(this, value);
+    }
+
+    public boolean all(Function<Number, Boolean> function) {
+        return JNDArray.all(this, function);
+    }
+
+    public boolean any(Function<Number, Boolean> function) {
+        return JNDArray.any(this, function);
     }
 
     /**

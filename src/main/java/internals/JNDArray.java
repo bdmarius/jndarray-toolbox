@@ -1,6 +1,9 @@
 package internals;
 
-public class JNum {
+import java.util.function.BiFunction;
+import java.util.function.Function;
+
+public class JNDArray {
 
     public static Tensor transpose(Tensor tensor) {
         return TensorTranspose.transpose(tensor);
@@ -204,6 +207,38 @@ public class JNum {
 
     public static Tensor prod(Tensor tensor, int[] axis, boolean keepDimensions) {
         return TensorAggregation.prod(tensor, axis, keepDimensions);
+    }
+
+    public static boolean lower(Tensor tensor, Number value) {
+        return TensorLogicFunctions.lower(tensor, value);
+    }
+
+    public static boolean lowerEquals(Tensor tensor, Number value) {
+        return TensorLogicFunctions.lowerEquals(tensor, value);
+    }
+
+    public static boolean greater(Tensor tensor, Number value) {
+        return TensorLogicFunctions.greater(tensor, value);
+    }
+
+    public static boolean greaterEquals(Tensor tensor, Number value) {
+        return TensorLogicFunctions.greaterEquals(tensor, value);
+    }
+
+    public static boolean equals(Tensor tensor, Number value) {
+        return TensorLogicFunctions.equals(tensor, value);
+    }
+
+    public static boolean notEquals(Tensor tensor, Number value) {
+        return TensorLogicFunctions.notEquals(tensor, value);
+    }
+
+    public static boolean all(Tensor tensor, Function<Number, Boolean> function) {
+        return TensorLogicFunctions.all(tensor, function);
+    }
+
+    public static boolean any(Tensor tensor, Function<Number, Boolean> function) {
+        return TensorLogicFunctions.any(tensor, function);
     }
 
 }

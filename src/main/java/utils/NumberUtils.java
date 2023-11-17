@@ -20,42 +20,78 @@ public class NumberUtils {
     public static Map<JNumDataType, Function<Number, Number>> EXP = loadExpFunctions();
     public static Map<JNumDataType, Function<Number, Number>> SQRT = loadSqrtFunctions();
     public static Map<JNumDataType, Function<Number, Number>> MINUS = loadMinusFunctions();
+    public static Map<JNumDataType, Map<JNumDataType, BiFunction<Number, Number, Boolean>>> LOWER = loadLowerFunctions();
+    public static Map<JNumDataType, Map<JNumDataType, BiFunction<Number, Number, Boolean>>> LOWER_EQUALS = loadLowerEqualsFunctions();
+    public static Map<JNumDataType, Map<JNumDataType, BiFunction<Number, Number, Boolean>>> GREATER = loadGreaterFunctions();
+    public static Map<JNumDataType, Map<JNumDataType, BiFunction<Number, Number, Boolean>>> GREATER_EQUALS = loadGreaterEqualsFunctions();
+    public static Map<JNumDataType, Map<JNumDataType, BiFunction<Number, Number, Boolean>>> EQUALS = loadEqualsFunctions();
+    public static Map<JNumDataType, Map<JNumDataType, BiFunction<Number, Number, Boolean>>> NOT_EQUALS = loadNotEqualsFunctions();
 
     public static Number addElements(JNumDataType firstDataType, Number firstValue, JNumDataType secondDataType, Number secondValue) {
-        return performElementToElementOperation(NumberUtils.ADD, firstDataType, firstValue, secondDataType, secondValue);
+        return performElementToElementNumberOperation(NumberUtils.ADD, firstDataType, firstValue, secondDataType, secondValue);
     }
 
     public static Number subtractElements(JNumDataType firstDataType, Number firstValue, JNumDataType secondDataType, Number secondValue) {
-        return performElementToElementOperation(NumberUtils.SUBTRACT, firstDataType, firstValue, secondDataType, secondValue);
+        return performElementToElementNumberOperation(NumberUtils.SUBTRACT, firstDataType, firstValue, secondDataType, secondValue);
     }
 
     public static Number multiplyElements(JNumDataType firstDataType, Number firstValue, JNumDataType secondDataType, Number secondValue) {
-        return performElementToElementOperation(NumberUtils.MULTIPLY, firstDataType, firstValue, secondDataType, secondValue);
+        return performElementToElementNumberOperation(NumberUtils.MULTIPLY, firstDataType, firstValue, secondDataType, secondValue);
     }
 
     public static Number divideElements(JNumDataType firstDataType, Number firstValue, JNumDataType secondDataType, Number secondValue) {
-        return performElementToElementOperation(NumberUtils.DIVIDE, firstDataType, firstValue, secondDataType, secondValue);
+        return performElementToElementNumberOperation(NumberUtils.DIVIDE, firstDataType, firstValue, secondDataType, secondValue);
     }
 
     public static Number minElement(JNumDataType firstDataType, Number firstValue, JNumDataType secondDataType, Number secondValue) {
-        return performElementToElementOperation(NumberUtils.MIN, firstDataType, firstValue, secondDataType, secondValue);
+        return performElementToElementNumberOperation(NumberUtils.MIN, firstDataType, firstValue, secondDataType, secondValue);
     }
 
     public static Number maxElement(JNumDataType firstDataType, Number firstValue, JNumDataType secondDataType, Number secondValue) {
-        return performElementToElementOperation(NumberUtils.MAX, firstDataType, firstValue, secondDataType, secondValue);
+        return performElementToElementNumberOperation(NumberUtils.MAX, firstDataType, firstValue, secondDataType, secondValue);
     }
 
     public static Number powerOfElement(JNumDataType firstDataType, Number firstValue, JNumDataType secondDataType, Number secondValue) {
-        return performElementToElementOperation(NumberUtils.POWER_OF, firstDataType, firstValue, secondDataType, secondValue);
+        return performElementToElementNumberOperation(NumberUtils.POWER_OF, firstDataType, firstValue, secondDataType, secondValue);
     }
 
     public static Number sqrt(JNumDataType dataType, Number value) {
         return performSingleElementOperation(SQRT, dataType, value);
     }
 
-    private static Number performElementToElementOperation(Map<JNumDataType, Map<JNumDataType, BiFunction<Number, Number, Number>>> operation,
-                                                           JNumDataType firstDataType, Number firstValue,
-                                                           JNumDataType secondDataType, Number secondValue) {
+    public static Boolean lower(JNumDataType firstDataType, Number firstValue, JNumDataType secondDataType, Number secondValue) {
+        return performElementToElementBooleanOperation(NumberUtils.LOWER, firstDataType, firstValue, secondDataType, secondValue);
+    }
+
+    public static Boolean lowerEquals(JNumDataType firstDataType, Number firstValue, JNumDataType secondDataType, Number secondValue) {
+        return performElementToElementBooleanOperation(NumberUtils.LOWER_EQUALS, firstDataType, firstValue, secondDataType, secondValue);
+    }
+
+    public static Boolean greater(JNumDataType firstDataType, Number firstValue, JNumDataType secondDataType, Number secondValue) {
+        return performElementToElementBooleanOperation(NumberUtils.GREATER, firstDataType, firstValue, secondDataType, secondValue);
+    }
+
+    public static Boolean greaterEquals(JNumDataType firstDataType, Number firstValue, JNumDataType secondDataType, Number secondValue) {
+        return performElementToElementBooleanOperation(NumberUtils.GREATER_EQUALS, firstDataType, firstValue, secondDataType, secondValue);
+    }
+
+    public static Boolean equals(JNumDataType firstDataType, Number firstValue, JNumDataType secondDataType, Number secondValue) {
+        return performElementToElementBooleanOperation(NumberUtils.EQUALS, firstDataType, firstValue, secondDataType, secondValue);
+    }
+
+    public static Boolean notEquals(JNumDataType firstDataType, Number firstValue, JNumDataType secondDataType, Number secondValue) {
+        return performElementToElementBooleanOperation(NumberUtils.NOT_EQUALS, firstDataType, firstValue, secondDataType, secondValue);
+    }
+
+    private static Number performElementToElementNumberOperation(Map<JNumDataType, Map<JNumDataType, BiFunction<Number, Number, Number>>> operation,
+                                                                 JNumDataType firstDataType, Number firstValue,
+                                                                 JNumDataType secondDataType, Number secondValue) {
+        return operation.get(firstDataType).get(secondDataType).apply(firstValue, secondValue);
+    }
+
+    private static Boolean performElementToElementBooleanOperation(Map<JNumDataType, Map<JNumDataType, BiFunction<Number, Number, Boolean>>> operation,
+                                                                 JNumDataType firstDataType, Number firstValue,
+                                                                 JNumDataType secondDataType, Number secondValue) {
         return operation.get(firstDataType).get(secondDataType).apply(firstValue, secondValue);
     }
 
@@ -425,6 +461,318 @@ public class NumberUtils {
         functions.get(JNumDataType.DOUBLE).put(JNumDataType.LONG, (a, b) -> Math.pow(a.doubleValue(), b.longValue()));
         functions.get(JNumDataType.DOUBLE).put(JNumDataType.FLOAT, (a, b) -> Math.pow(a.doubleValue(), b.floatValue()));
         functions.get(JNumDataType.DOUBLE).put(JNumDataType.DOUBLE, (a, b) -> Math.pow(a.doubleValue(), b.doubleValue()));
+        return functions;
+    }
+
+    private static Map<JNumDataType, Map<JNumDataType, BiFunction<Number, Number, Boolean>>> loadLowerFunctions() {
+        Map<JNumDataType, Map<JNumDataType, BiFunction<Number, Number, Boolean>>> functions = new HashMap<>();
+        functions.put(JNumDataType.BYTE, new HashMap<>());
+        functions.get(JNumDataType.BYTE).put(JNumDataType.BYTE, (a, b) -> a.byteValue() < b.byteValue());
+        functions.get(JNumDataType.BYTE).put(JNumDataType.SHORT, (a, b) ->  a.byteValue() < b.shortValue());
+        functions.get(JNumDataType.BYTE).put(JNumDataType.INT, (a, b) -> a.byteValue() < b.intValue());
+        functions.get(JNumDataType.BYTE).put(JNumDataType.LONG, (a, b) -> a.byteValue() < b.longValue());
+        functions.get(JNumDataType.BYTE).put(JNumDataType.FLOAT, (a, b) -> a.byteValue() < b.floatValue());
+        functions.get(JNumDataType.BYTE).put(JNumDataType.DOUBLE, (a, b) -> a.byteValue() < b.doubleValue());
+
+        functions.put(JNumDataType.SHORT, new HashMap<>());
+        functions.get(JNumDataType.SHORT).put(JNumDataType.BYTE, (a, b) -> a.byteValue() < b.byteValue());
+        functions.get(JNumDataType.SHORT).put(JNumDataType.SHORT, (a, b) -> a.byteValue() < b.shortValue());
+        functions.get(JNumDataType.SHORT).put(JNumDataType.INT, (a, b) -> a.byteValue() < b.intValue());
+        functions.get(JNumDataType.SHORT).put(JNumDataType.LONG, (a, b) -> a.byteValue() < b.longValue());
+        functions.get(JNumDataType.SHORT).put(JNumDataType.FLOAT, (a, b) -> a.byteValue() < b.floatValue());
+        functions.get(JNumDataType.SHORT).put(JNumDataType.DOUBLE, (a, b) -> a.byteValue() < b.doubleValue());
+
+        functions.put(JNumDataType.INT, new HashMap<>());
+        functions.get(JNumDataType.INT).put(JNumDataType.BYTE, (a, b) -> a.intValue() < b.byteValue());
+        functions.get(JNumDataType.INT).put(JNumDataType.SHORT, (a, b) -> a.intValue() < b.shortValue());
+        functions.get(JNumDataType.INT).put(JNumDataType.INT, (a, b) -> a.intValue() < b.intValue());
+        functions.get(JNumDataType.INT).put(JNumDataType.LONG, (a, b) -> a.intValue() < b.longValue());
+        functions.get(JNumDataType.INT).put(JNumDataType.FLOAT, (a, b) -> a.intValue() < b.floatValue());
+        functions.get(JNumDataType.INT).put(JNumDataType.DOUBLE, (a, b) -> a.intValue() < b.doubleValue());
+
+        functions.put(JNumDataType.LONG, new HashMap<>());
+        functions.get(JNumDataType.LONG).put(JNumDataType.BYTE, (a, b) -> a.longValue() < b.byteValue());
+        functions.get(JNumDataType.LONG).put(JNumDataType.SHORT, (a, b) -> a.longValue() < b.shortValue());
+        functions.get(JNumDataType.LONG).put(JNumDataType.INT, (a, b) -> a.longValue() < b.intValue());
+        functions.get(JNumDataType.LONG).put(JNumDataType.LONG, (a, b) -> a.longValue() < b.longValue());
+        functions.get(JNumDataType.LONG).put(JNumDataType.FLOAT, (a, b) -> a.longValue() < b.floatValue());
+        functions.get(JNumDataType.LONG).put(JNumDataType.DOUBLE, (a, b) -> a.longValue() < b.doubleValue());
+
+        functions.put(JNumDataType.FLOAT, new HashMap<>());
+        functions.get(JNumDataType.FLOAT).put(JNumDataType.BYTE, (a, b) -> a.floatValue() < b.byteValue());
+        functions.get(JNumDataType.FLOAT).put(JNumDataType.SHORT, (a, b) -> a.floatValue() < b.shortValue());
+        functions.get(JNumDataType.FLOAT).put(JNumDataType.INT, (a, b) -> a.floatValue() < b.intValue());
+        functions.get(JNumDataType.FLOAT).put(JNumDataType.LONG, (a, b) -> a.floatValue() < b.longValue());
+        functions.get(JNumDataType.FLOAT).put(JNumDataType.FLOAT, (a, b) -> a.floatValue() < b.floatValue());
+        functions.get(JNumDataType.FLOAT).put(JNumDataType.DOUBLE, (a, b) -> a.floatValue() < b.doubleValue());
+
+        functions.put(JNumDataType.DOUBLE, new HashMap<>());
+        functions.get(JNumDataType.DOUBLE).put(JNumDataType.BYTE, (a, b) -> a.doubleValue() < b.byteValue());
+        functions.get(JNumDataType.DOUBLE).put(JNumDataType.SHORT, (a, b) -> a.doubleValue() < b.shortValue());
+        functions.get(JNumDataType.DOUBLE).put(JNumDataType.INT, (a, b) -> a.doubleValue() < b.intValue());
+        functions.get(JNumDataType.DOUBLE).put(JNumDataType.LONG, (a, b) -> a.doubleValue() < b.longValue());
+        functions.get(JNumDataType.DOUBLE).put(JNumDataType.FLOAT, (a, b) -> a.doubleValue() < b.floatValue());
+        functions.get(JNumDataType.DOUBLE).put(JNumDataType.DOUBLE, (a, b) -> a.doubleValue() < b.doubleValue());
+        return functions;
+    }
+
+    private static Map<JNumDataType, Map<JNumDataType, BiFunction<Number, Number, Boolean>>> loadLowerEqualsFunctions() {
+        Map<JNumDataType, Map<JNumDataType, BiFunction<Number, Number, Boolean>>> functions = new HashMap<>();
+        functions.put(JNumDataType.BYTE, new HashMap<>());
+        functions.get(JNumDataType.BYTE).put(JNumDataType.BYTE, (a, b) -> a.byteValue() <= b.byteValue());
+        functions.get(JNumDataType.BYTE).put(JNumDataType.SHORT, (a, b) ->  a.byteValue() <= b.shortValue());
+        functions.get(JNumDataType.BYTE).put(JNumDataType.INT, (a, b) -> a.byteValue() <= b.intValue());
+        functions.get(JNumDataType.BYTE).put(JNumDataType.LONG, (a, b) -> a.byteValue() <= b.longValue());
+        functions.get(JNumDataType.BYTE).put(JNumDataType.FLOAT, (a, b) -> a.byteValue() <= b.floatValue());
+        functions.get(JNumDataType.BYTE).put(JNumDataType.DOUBLE, (a, b) -> a.byteValue() <= b.doubleValue());
+
+        functions.put(JNumDataType.SHORT, new HashMap<>());
+        functions.get(JNumDataType.SHORT).put(JNumDataType.BYTE, (a, b) -> a.byteValue() <= b.byteValue());
+        functions.get(JNumDataType.SHORT).put(JNumDataType.SHORT, (a, b) -> a.byteValue() <= b.shortValue());
+        functions.get(JNumDataType.SHORT).put(JNumDataType.INT, (a, b) -> a.byteValue() <= b.intValue());
+        functions.get(JNumDataType.SHORT).put(JNumDataType.LONG, (a, b) -> a.byteValue() <= b.longValue());
+        functions.get(JNumDataType.SHORT).put(JNumDataType.FLOAT, (a, b) -> a.byteValue() <= b.floatValue());
+        functions.get(JNumDataType.SHORT).put(JNumDataType.DOUBLE, (a, b) -> a.byteValue() <= b.doubleValue());
+
+        functions.put(JNumDataType.INT, new HashMap<>());
+        functions.get(JNumDataType.INT).put(JNumDataType.BYTE, (a, b) -> a.intValue() <= b.byteValue());
+        functions.get(JNumDataType.INT).put(JNumDataType.SHORT, (a, b) -> a.intValue() <= b.shortValue());
+        functions.get(JNumDataType.INT).put(JNumDataType.INT, (a, b) -> a.intValue() <= b.intValue());
+        functions.get(JNumDataType.INT).put(JNumDataType.LONG, (a, b) -> a.intValue() <= b.longValue());
+        functions.get(JNumDataType.INT).put(JNumDataType.FLOAT, (a, b) -> a.intValue() <= b.floatValue());
+        functions.get(JNumDataType.INT).put(JNumDataType.DOUBLE, (a, b) -> a.intValue() <= b.doubleValue());
+
+        functions.put(JNumDataType.LONG, new HashMap<>());
+        functions.get(JNumDataType.LONG).put(JNumDataType.BYTE, (a, b) -> a.longValue() <= b.byteValue());
+        functions.get(JNumDataType.LONG).put(JNumDataType.SHORT, (a, b) -> a.longValue() <= b.shortValue());
+        functions.get(JNumDataType.LONG).put(JNumDataType.INT, (a, b) -> a.longValue() <= b.intValue());
+        functions.get(JNumDataType.LONG).put(JNumDataType.LONG, (a, b) -> a.longValue() <= b.longValue());
+        functions.get(JNumDataType.LONG).put(JNumDataType.FLOAT, (a, b) -> a.longValue() <= b.floatValue());
+        functions.get(JNumDataType.LONG).put(JNumDataType.DOUBLE, (a, b) -> a.longValue() <= b.doubleValue());
+
+        functions.put(JNumDataType.FLOAT, new HashMap<>());
+        functions.get(JNumDataType.FLOAT).put(JNumDataType.BYTE, (a, b) -> a.floatValue() <= b.byteValue());
+        functions.get(JNumDataType.FLOAT).put(JNumDataType.SHORT, (a, b) -> a.floatValue() <= b.shortValue());
+        functions.get(JNumDataType.FLOAT).put(JNumDataType.INT, (a, b) -> a.floatValue() <= b.intValue());
+        functions.get(JNumDataType.FLOAT).put(JNumDataType.LONG, (a, b) -> a.floatValue() <= b.longValue());
+        functions.get(JNumDataType.FLOAT).put(JNumDataType.FLOAT, (a, b) -> a.floatValue() <= b.floatValue());
+        functions.get(JNumDataType.FLOAT).put(JNumDataType.DOUBLE, (a, b) -> a.floatValue() <= b.doubleValue());
+
+        functions.put(JNumDataType.DOUBLE, new HashMap<>());
+        functions.get(JNumDataType.DOUBLE).put(JNumDataType.BYTE, (a, b) -> a.doubleValue() <= b.byteValue());
+        functions.get(JNumDataType.DOUBLE).put(JNumDataType.SHORT, (a, b) -> a.doubleValue() <= b.shortValue());
+        functions.get(JNumDataType.DOUBLE).put(JNumDataType.INT, (a, b) -> a.doubleValue() <= b.intValue());
+        functions.get(JNumDataType.DOUBLE).put(JNumDataType.LONG, (a, b) -> a.doubleValue() <= b.longValue());
+        functions.get(JNumDataType.DOUBLE).put(JNumDataType.FLOAT, (a, b) -> a.doubleValue() <= b.floatValue());
+        functions.get(JNumDataType.DOUBLE).put(JNumDataType.DOUBLE, (a, b) -> a.doubleValue() <= b.doubleValue());
+        return functions;
+    }
+
+    private static Map<JNumDataType, Map<JNumDataType, BiFunction<Number, Number, Boolean>>> loadGreaterFunctions() {
+        Map<JNumDataType, Map<JNumDataType, BiFunction<Number, Number, Boolean>>> functions = new HashMap<>();
+        functions.put(JNumDataType.BYTE, new HashMap<>());
+        functions.get(JNumDataType.BYTE).put(JNumDataType.BYTE, (a, b) -> a.byteValue() > b.byteValue());
+        functions.get(JNumDataType.BYTE).put(JNumDataType.SHORT, (a, b) ->  a.byteValue() > b.shortValue());
+        functions.get(JNumDataType.BYTE).put(JNumDataType.INT, (a, b) -> a.byteValue() > b.intValue());
+        functions.get(JNumDataType.BYTE).put(JNumDataType.LONG, (a, b) -> a.byteValue() > b.longValue());
+        functions.get(JNumDataType.BYTE).put(JNumDataType.FLOAT, (a, b) -> a.byteValue() > b.floatValue());
+        functions.get(JNumDataType.BYTE).put(JNumDataType.DOUBLE, (a, b) -> a.byteValue() > b.doubleValue());
+
+        functions.put(JNumDataType.SHORT, new HashMap<>());
+        functions.get(JNumDataType.SHORT).put(JNumDataType.BYTE, (a, b) -> a.byteValue() > b.byteValue());
+        functions.get(JNumDataType.SHORT).put(JNumDataType.SHORT, (a, b) -> a.byteValue() > b.shortValue());
+        functions.get(JNumDataType.SHORT).put(JNumDataType.INT, (a, b) -> a.byteValue() > b.intValue());
+        functions.get(JNumDataType.SHORT).put(JNumDataType.LONG, (a, b) -> a.byteValue() > b.longValue());
+        functions.get(JNumDataType.SHORT).put(JNumDataType.FLOAT, (a, b) -> a.byteValue() > b.floatValue());
+        functions.get(JNumDataType.SHORT).put(JNumDataType.DOUBLE, (a, b) -> a.byteValue() > b.doubleValue());
+
+        functions.put(JNumDataType.INT, new HashMap<>());
+        functions.get(JNumDataType.INT).put(JNumDataType.BYTE, (a, b) -> a.intValue() > b.byteValue());
+        functions.get(JNumDataType.INT).put(JNumDataType.SHORT, (a, b) -> a.intValue() > b.shortValue());
+        functions.get(JNumDataType.INT).put(JNumDataType.INT, (a, b) -> a.intValue() > b.intValue());
+        functions.get(JNumDataType.INT).put(JNumDataType.LONG, (a, b) -> a.intValue() > b.longValue());
+        functions.get(JNumDataType.INT).put(JNumDataType.FLOAT, (a, b) -> a.intValue() > b.floatValue());
+        functions.get(JNumDataType.INT).put(JNumDataType.DOUBLE, (a, b) -> a.intValue() > b.doubleValue());
+
+        functions.put(JNumDataType.LONG, new HashMap<>());
+        functions.get(JNumDataType.LONG).put(JNumDataType.BYTE, (a, b) -> a.longValue() > b.byteValue());
+        functions.get(JNumDataType.LONG).put(JNumDataType.SHORT, (a, b) -> a.longValue() > b.shortValue());
+        functions.get(JNumDataType.LONG).put(JNumDataType.INT, (a, b) -> a.longValue() > b.intValue());
+        functions.get(JNumDataType.LONG).put(JNumDataType.LONG, (a, b) -> a.longValue() > b.longValue());
+        functions.get(JNumDataType.LONG).put(JNumDataType.FLOAT, (a, b) -> a.longValue() > b.floatValue());
+        functions.get(JNumDataType.LONG).put(JNumDataType.DOUBLE, (a, b) -> a.longValue() > b.doubleValue());
+
+        functions.put(JNumDataType.FLOAT, new HashMap<>());
+        functions.get(JNumDataType.FLOAT).put(JNumDataType.BYTE, (a, b) -> a.floatValue() > b.byteValue());
+        functions.get(JNumDataType.FLOAT).put(JNumDataType.SHORT, (a, b) -> a.floatValue() > b.shortValue());
+        functions.get(JNumDataType.FLOAT).put(JNumDataType.INT, (a, b) -> a.floatValue() > b.intValue());
+        functions.get(JNumDataType.FLOAT).put(JNumDataType.LONG, (a, b) -> a.floatValue() > b.longValue());
+        functions.get(JNumDataType.FLOAT).put(JNumDataType.FLOAT, (a, b) -> a.floatValue() > b.floatValue());
+        functions.get(JNumDataType.FLOAT).put(JNumDataType.DOUBLE, (a, b) -> a.floatValue() > b.doubleValue());
+
+        functions.put(JNumDataType.DOUBLE, new HashMap<>());
+        functions.get(JNumDataType.DOUBLE).put(JNumDataType.BYTE, (a, b) -> a.doubleValue() > b.byteValue());
+        functions.get(JNumDataType.DOUBLE).put(JNumDataType.SHORT, (a, b) -> a.doubleValue() > b.shortValue());
+        functions.get(JNumDataType.DOUBLE).put(JNumDataType.INT, (a, b) -> a.doubleValue() > b.intValue());
+        functions.get(JNumDataType.DOUBLE).put(JNumDataType.LONG, (a, b) -> a.doubleValue() > b.longValue());
+        functions.get(JNumDataType.DOUBLE).put(JNumDataType.FLOAT, (a, b) -> a.doubleValue() > b.floatValue());
+        functions.get(JNumDataType.DOUBLE).put(JNumDataType.DOUBLE, (a, b) -> a.doubleValue() > b.doubleValue());
+        return functions;
+    }
+
+    private static Map<JNumDataType, Map<JNumDataType, BiFunction<Number, Number, Boolean>>> loadGreaterEqualsFunctions() {
+        Map<JNumDataType, Map<JNumDataType, BiFunction<Number, Number, Boolean>>> functions = new HashMap<>();
+        functions.put(JNumDataType.BYTE, new HashMap<>());
+        functions.get(JNumDataType.BYTE).put(JNumDataType.BYTE, (a, b) -> a.byteValue() >= b.byteValue());
+        functions.get(JNumDataType.BYTE).put(JNumDataType.SHORT, (a, b) ->  a.byteValue() >= b.shortValue());
+        functions.get(JNumDataType.BYTE).put(JNumDataType.INT, (a, b) -> a.byteValue() >= b.intValue());
+        functions.get(JNumDataType.BYTE).put(JNumDataType.LONG, (a, b) -> a.byteValue() >= b.longValue());
+        functions.get(JNumDataType.BYTE).put(JNumDataType.FLOAT, (a, b) -> a.byteValue() >= b.floatValue());
+        functions.get(JNumDataType.BYTE).put(JNumDataType.DOUBLE, (a, b) -> a.byteValue() >= b.doubleValue());
+
+        functions.put(JNumDataType.SHORT, new HashMap<>());
+        functions.get(JNumDataType.SHORT).put(JNumDataType.BYTE, (a, b) -> a.byteValue() >= b.byteValue());
+        functions.get(JNumDataType.SHORT).put(JNumDataType.SHORT, (a, b) -> a.byteValue() >= b.shortValue());
+        functions.get(JNumDataType.SHORT).put(JNumDataType.INT, (a, b) -> a.byteValue() >= b.intValue());
+        functions.get(JNumDataType.SHORT).put(JNumDataType.LONG, (a, b) -> a.byteValue() >= b.longValue());
+        functions.get(JNumDataType.SHORT).put(JNumDataType.FLOAT, (a, b) -> a.byteValue() >= b.floatValue());
+        functions.get(JNumDataType.SHORT).put(JNumDataType.DOUBLE, (a, b) -> a.byteValue() >= b.doubleValue());
+
+        functions.put(JNumDataType.INT, new HashMap<>());
+        functions.get(JNumDataType.INT).put(JNumDataType.BYTE, (a, b) -> a.intValue() >= b.byteValue());
+        functions.get(JNumDataType.INT).put(JNumDataType.SHORT, (a, b) -> a.intValue() >= b.shortValue());
+        functions.get(JNumDataType.INT).put(JNumDataType.INT, (a, b) -> a.intValue() >= b.intValue());
+        functions.get(JNumDataType.INT).put(JNumDataType.LONG, (a, b) -> a.intValue() >= b.longValue());
+        functions.get(JNumDataType.INT).put(JNumDataType.FLOAT, (a, b) -> a.intValue() >= b.floatValue());
+        functions.get(JNumDataType.INT).put(JNumDataType.DOUBLE, (a, b) -> a.intValue() >= b.doubleValue());
+
+        functions.put(JNumDataType.LONG, new HashMap<>());
+        functions.get(JNumDataType.LONG).put(JNumDataType.BYTE, (a, b) -> a.longValue() >= b.byteValue());
+        functions.get(JNumDataType.LONG).put(JNumDataType.SHORT, (a, b) -> a.longValue() >= b.shortValue());
+        functions.get(JNumDataType.LONG).put(JNumDataType.INT, (a, b) -> a.longValue() >= b.intValue());
+        functions.get(JNumDataType.LONG).put(JNumDataType.LONG, (a, b) -> a.longValue() >= b.longValue());
+        functions.get(JNumDataType.LONG).put(JNumDataType.FLOAT, (a, b) -> a.longValue() >= b.floatValue());
+        functions.get(JNumDataType.LONG).put(JNumDataType.DOUBLE, (a, b) -> a.longValue() >= b.doubleValue());
+
+        functions.put(JNumDataType.FLOAT, new HashMap<>());
+        functions.get(JNumDataType.FLOAT).put(JNumDataType.BYTE, (a, b) -> a.floatValue() >= b.byteValue());
+        functions.get(JNumDataType.FLOAT).put(JNumDataType.SHORT, (a, b) -> a.floatValue() >= b.shortValue());
+        functions.get(JNumDataType.FLOAT).put(JNumDataType.INT, (a, b) -> a.floatValue() >= b.intValue());
+        functions.get(JNumDataType.FLOAT).put(JNumDataType.LONG, (a, b) -> a.floatValue() >= b.longValue());
+        functions.get(JNumDataType.FLOAT).put(JNumDataType.FLOAT, (a, b) -> a.floatValue() >= b.floatValue());
+        functions.get(JNumDataType.FLOAT).put(JNumDataType.DOUBLE, (a, b) -> a.floatValue() >= b.doubleValue());
+
+        functions.put(JNumDataType.DOUBLE, new HashMap<>());
+        functions.get(JNumDataType.DOUBLE).put(JNumDataType.BYTE, (a, b) -> a.doubleValue() >= b.byteValue());
+        functions.get(JNumDataType.DOUBLE).put(JNumDataType.SHORT, (a, b) -> a.doubleValue() >= b.shortValue());
+        functions.get(JNumDataType.DOUBLE).put(JNumDataType.INT, (a, b) -> a.doubleValue() >= b.intValue());
+        functions.get(JNumDataType.DOUBLE).put(JNumDataType.LONG, (a, b) -> a.doubleValue() >= b.longValue());
+        functions.get(JNumDataType.DOUBLE).put(JNumDataType.FLOAT, (a, b) -> a.doubleValue() >= b.floatValue());
+        functions.get(JNumDataType.DOUBLE).put(JNumDataType.DOUBLE, (a, b) -> a.doubleValue() >= b.doubleValue());
+        return functions;
+    }
+
+    private static Map<JNumDataType, Map<JNumDataType, BiFunction<Number, Number, Boolean>>> loadEqualsFunctions() {
+        Map<JNumDataType, Map<JNumDataType, BiFunction<Number, Number, Boolean>>> functions = new HashMap<>();
+        functions.put(JNumDataType.BYTE, new HashMap<>());
+        functions.get(JNumDataType.BYTE).put(JNumDataType.BYTE, (a, b) -> a.byteValue() == b.byteValue());
+        functions.get(JNumDataType.BYTE).put(JNumDataType.SHORT, (a, b) ->  a.byteValue() == b.shortValue());
+        functions.get(JNumDataType.BYTE).put(JNumDataType.INT, (a, b) -> a.byteValue() == b.intValue());
+        functions.get(JNumDataType.BYTE).put(JNumDataType.LONG, (a, b) -> a.byteValue() == b.longValue());
+        functions.get(JNumDataType.BYTE).put(JNumDataType.FLOAT, (a, b) -> a.byteValue() == b.floatValue());
+        functions.get(JNumDataType.BYTE).put(JNumDataType.DOUBLE, (a, b) -> a.byteValue() == b.doubleValue());
+
+        functions.put(JNumDataType.SHORT, new HashMap<>());
+        functions.get(JNumDataType.SHORT).put(JNumDataType.BYTE, (a, b) -> a.byteValue() == b.byteValue());
+        functions.get(JNumDataType.SHORT).put(JNumDataType.SHORT, (a, b) -> a.byteValue() == b.shortValue());
+        functions.get(JNumDataType.SHORT).put(JNumDataType.INT, (a, b) -> a.byteValue() == b.intValue());
+        functions.get(JNumDataType.SHORT).put(JNumDataType.LONG, (a, b) -> a.byteValue() == b.longValue());
+        functions.get(JNumDataType.SHORT).put(JNumDataType.FLOAT, (a, b) -> a.byteValue() == b.floatValue());
+        functions.get(JNumDataType.SHORT).put(JNumDataType.DOUBLE, (a, b) -> a.byteValue() == b.doubleValue());
+
+        functions.put(JNumDataType.INT, new HashMap<>());
+        functions.get(JNumDataType.INT).put(JNumDataType.BYTE, (a, b) -> a.intValue() == b.byteValue());
+        functions.get(JNumDataType.INT).put(JNumDataType.SHORT, (a, b) -> a.intValue() == b.shortValue());
+        functions.get(JNumDataType.INT).put(JNumDataType.INT, (a, b) -> a.intValue() == b.intValue());
+        functions.get(JNumDataType.INT).put(JNumDataType.LONG, (a, b) -> a.intValue() == b.longValue());
+        functions.get(JNumDataType.INT).put(JNumDataType.FLOAT, (a, b) -> a.intValue() == b.floatValue());
+        functions.get(JNumDataType.INT).put(JNumDataType.DOUBLE, (a, b) -> a.intValue() == b.doubleValue());
+
+        functions.put(JNumDataType.LONG, new HashMap<>());
+        functions.get(JNumDataType.LONG).put(JNumDataType.BYTE, (a, b) -> a.longValue() == b.byteValue());
+        functions.get(JNumDataType.LONG).put(JNumDataType.SHORT, (a, b) -> a.longValue() == b.shortValue());
+        functions.get(JNumDataType.LONG).put(JNumDataType.INT, (a, b) -> a.longValue() == b.intValue());
+        functions.get(JNumDataType.LONG).put(JNumDataType.LONG, (a, b) -> a.longValue() == b.longValue());
+        functions.get(JNumDataType.LONG).put(JNumDataType.FLOAT, (a, b) -> a.longValue() == b.floatValue());
+        functions.get(JNumDataType.LONG).put(JNumDataType.DOUBLE, (a, b) -> a.longValue() == b.doubleValue());
+
+        functions.put(JNumDataType.FLOAT, new HashMap<>());
+        functions.get(JNumDataType.FLOAT).put(JNumDataType.BYTE, (a, b) -> a.floatValue() == b.byteValue());
+        functions.get(JNumDataType.FLOAT).put(JNumDataType.SHORT, (a, b) -> a.floatValue() == b.shortValue());
+        functions.get(JNumDataType.FLOAT).put(JNumDataType.INT, (a, b) -> a.floatValue() == b.intValue());
+        functions.get(JNumDataType.FLOAT).put(JNumDataType.LONG, (a, b) -> a.floatValue() == b.longValue());
+        functions.get(JNumDataType.FLOAT).put(JNumDataType.FLOAT, (a, b) -> a.floatValue() == b.floatValue());
+        functions.get(JNumDataType.FLOAT).put(JNumDataType.DOUBLE, (a, b) -> a.floatValue() == b.doubleValue());
+
+        functions.put(JNumDataType.DOUBLE, new HashMap<>());
+        functions.get(JNumDataType.DOUBLE).put(JNumDataType.BYTE, (a, b) -> a.doubleValue() == b.byteValue());
+        functions.get(JNumDataType.DOUBLE).put(JNumDataType.SHORT, (a, b) -> a.doubleValue() == b.shortValue());
+        functions.get(JNumDataType.DOUBLE).put(JNumDataType.INT, (a, b) -> a.doubleValue() == b.intValue());
+        functions.get(JNumDataType.DOUBLE).put(JNumDataType.LONG, (a, b) -> a.doubleValue() == b.longValue());
+        functions.get(JNumDataType.DOUBLE).put(JNumDataType.FLOAT, (a, b) -> a.doubleValue() == b.floatValue());
+        functions.get(JNumDataType.DOUBLE).put(JNumDataType.DOUBLE, (a, b) -> a.doubleValue() == b.doubleValue());
+        return functions;
+    }
+
+    private static Map<JNumDataType, Map<JNumDataType, BiFunction<Number, Number, Boolean>>> loadNotEqualsFunctions() {
+        Map<JNumDataType, Map<JNumDataType, BiFunction<Number, Number, Boolean>>> functions = new HashMap<>();
+        functions.put(JNumDataType.BYTE, new HashMap<>());
+        functions.get(JNumDataType.BYTE).put(JNumDataType.BYTE, (a, b) -> a.byteValue() != b.byteValue());
+        functions.get(JNumDataType.BYTE).put(JNumDataType.SHORT, (a, b) ->  a.byteValue() != b.shortValue());
+        functions.get(JNumDataType.BYTE).put(JNumDataType.INT, (a, b) -> a.byteValue() != b.intValue());
+        functions.get(JNumDataType.BYTE).put(JNumDataType.LONG, (a, b) -> a.byteValue() != b.longValue());
+        functions.get(JNumDataType.BYTE).put(JNumDataType.FLOAT, (a, b) -> a.byteValue() != b.floatValue());
+        functions.get(JNumDataType.BYTE).put(JNumDataType.DOUBLE, (a, b) -> a.byteValue() != b.doubleValue());
+
+        functions.put(JNumDataType.SHORT, new HashMap<>());
+        functions.get(JNumDataType.SHORT).put(JNumDataType.BYTE, (a, b) -> a.byteValue() != b.byteValue());
+        functions.get(JNumDataType.SHORT).put(JNumDataType.SHORT, (a, b) -> a.byteValue() != b.shortValue());
+        functions.get(JNumDataType.SHORT).put(JNumDataType.INT, (a, b) -> a.byteValue() != b.intValue());
+        functions.get(JNumDataType.SHORT).put(JNumDataType.LONG, (a, b) -> a.byteValue() != b.longValue());
+        functions.get(JNumDataType.SHORT).put(JNumDataType.FLOAT, (a, b) -> a.byteValue() != b.floatValue());
+        functions.get(JNumDataType.SHORT).put(JNumDataType.DOUBLE, (a, b) -> a.byteValue() != b.doubleValue());
+
+        functions.put(JNumDataType.INT, new HashMap<>());
+        functions.get(JNumDataType.INT).put(JNumDataType.BYTE, (a, b) -> a.intValue() != b.byteValue());
+        functions.get(JNumDataType.INT).put(JNumDataType.SHORT, (a, b) -> a.intValue() != b.shortValue());
+        functions.get(JNumDataType.INT).put(JNumDataType.INT, (a, b) -> a.intValue() != b.intValue());
+        functions.get(JNumDataType.INT).put(JNumDataType.LONG, (a, b) -> a.intValue() != b.longValue());
+        functions.get(JNumDataType.INT).put(JNumDataType.FLOAT, (a, b) -> a.intValue() != b.floatValue());
+        functions.get(JNumDataType.INT).put(JNumDataType.DOUBLE, (a, b) -> a.intValue() != b.doubleValue());
+
+        functions.put(JNumDataType.LONG, new HashMap<>());
+        functions.get(JNumDataType.LONG).put(JNumDataType.BYTE, (a, b) -> a.longValue() != b.byteValue());
+        functions.get(JNumDataType.LONG).put(JNumDataType.SHORT, (a, b) -> a.longValue() != b.shortValue());
+        functions.get(JNumDataType.LONG).put(JNumDataType.INT, (a, b) -> a.longValue() != b.intValue());
+        functions.get(JNumDataType.LONG).put(JNumDataType.LONG, (a, b) -> a.longValue() != b.longValue());
+        functions.get(JNumDataType.LONG).put(JNumDataType.FLOAT, (a, b) -> a.longValue() != b.floatValue());
+        functions.get(JNumDataType.LONG).put(JNumDataType.DOUBLE, (a, b) -> a.longValue() != b.doubleValue());
+
+        functions.put(JNumDataType.FLOAT, new HashMap<>());
+        functions.get(JNumDataType.FLOAT).put(JNumDataType.BYTE, (a, b) -> a.floatValue() != b.byteValue());
+        functions.get(JNumDataType.FLOAT).put(JNumDataType.SHORT, (a, b) -> a.floatValue() != b.shortValue());
+        functions.get(JNumDataType.FLOAT).put(JNumDataType.INT, (a, b) -> a.floatValue() != b.intValue());
+        functions.get(JNumDataType.FLOAT).put(JNumDataType.LONG, (a, b) -> a.floatValue() != b.longValue());
+        functions.get(JNumDataType.FLOAT).put(JNumDataType.FLOAT, (a, b) -> a.floatValue() != b.floatValue());
+        functions.get(JNumDataType.FLOAT).put(JNumDataType.DOUBLE, (a, b) -> a.floatValue() != b.doubleValue());
+
+        functions.put(JNumDataType.DOUBLE, new HashMap<>());
+        functions.get(JNumDataType.DOUBLE).put(JNumDataType.BYTE, (a, b) -> a.doubleValue() != b.byteValue());
+        functions.get(JNumDataType.DOUBLE).put(JNumDataType.SHORT, (a, b) -> a.doubleValue() != b.shortValue());
+        functions.get(JNumDataType.DOUBLE).put(JNumDataType.INT, (a, b) -> a.doubleValue() != b.intValue());
+        functions.get(JNumDataType.DOUBLE).put(JNumDataType.LONG, (a, b) -> a.doubleValue() != b.longValue());
+        functions.get(JNumDataType.DOUBLE).put(JNumDataType.FLOAT, (a, b) -> a.doubleValue() != b.floatValue());
+        functions.get(JNumDataType.DOUBLE).put(JNumDataType.DOUBLE, (a, b) -> a.doubleValue() != b.doubleValue());
         return functions;
     }
 
