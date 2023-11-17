@@ -17,7 +17,7 @@ public class TensorWhereFunctionTest {
                 {7, 8, 9},
                 {10, 11, 12}
         });
-        Tensor actual = JNDArray.where(tensor, (x -> {
+        Tensor actual = tensor.where((x -> {
             if (x.doubleValue() >= 5) {
                 return x;
             } else {
