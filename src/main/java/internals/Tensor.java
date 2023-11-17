@@ -73,9 +73,6 @@ public final class Tensor {
     }
 
     public void set(Number newValue, int... index) {
-        if (!this.dataType.equals(TypeUtils.parseDataType(newValue.getClass()))) {
-            throw new IllegalArgumentException(String.format("Cannot assign new value of class %s to Tensor of type %s", newValue.getClass().getComponentType(), dataType));
-        }
         setValue(newValue, index);
     }
 
@@ -471,9 +468,15 @@ public final class Tensor {
             if (base.isView) {
                 base.setInInternalArray(index, value);
             } else {
+                if (!base.dataType.equals(TypeUtils.parseDataType(value.getClass()))) {
+                    base.dataType = TypeUtils.getHighestDataType(base.dataType, TypeUtils.parseDataType(value.getClass()));
+                }
                 base.internalArray[index] = value;
             }
         } else {
+            if (!this.dataType.equals(TypeUtils.parseDataType(value.getClass()))) {
+                this.dataType = TypeUtils.getHighestDataType(this.dataType, TypeUtils.parseDataType(value.getClass()));
+            }
             internalArray[index] = value;
         }
     }
@@ -585,7 +588,10 @@ public final class Tensor {
         if (isView) {
             base.setValue(value, index);
         } else {
-            internalArray[computeIndex(shape, strides, index)] = value;
+        if (!this.dataType.equals(TypeUtils.parseDataType(value.getClass()))) {
+            this.dataType = TypeUtils.getHighestDataType(this.dataType, TypeUtils.parseDataType(value.getClass()));
+        }
+        internalArray[computeIndex(shape, strides, index)] = value;
         }
     }
 

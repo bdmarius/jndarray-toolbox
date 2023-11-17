@@ -76,9 +76,9 @@ public class TypeUtils {
      */
     public static JNumDataType getHighestDataType(JNumDataType firstDataType, JNumDataType secondDataType) {
         if (typePromotions.indexOf(firstDataType) >= typePromotions.indexOf(secondDataType)) {
-            return firstDataType;
-        } else {
             return secondDataType;
+        } else {
+            return firstDataType;
         }
     }
 }

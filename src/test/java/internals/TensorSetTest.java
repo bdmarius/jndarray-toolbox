@@ -35,10 +35,11 @@ public class TensorSetTest {
         assertEquals(100, tensor.get(2, 1));
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testSet_WrongDataType() {
+    @Test
+    public void testSet_ChangeDataType() {
         Tensor tensor = new Tensor(1);
+        assertEquals(tensor.getDataType(), JNumDataType.INT);
         tensor.set(2.0, 0);
+        assertEquals(tensor.getDataType(), JNumDataType.DOUBLE);
     }
-
 }
