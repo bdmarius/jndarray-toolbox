@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -316,6 +315,14 @@ public final class Tensor {
 
     public Tensor where(Function<Number, Number> function) {
         return JNDArray.where(this, function);
+    }
+
+    public List<int[]> indices() {
+        return JNDArray.indices(this);
+    }
+
+    public List<int[]> indices(Function<Number, Boolean> function) {
+        return JNDArray.indices(this, function);
     }
 
     /**

@@ -1,6 +1,6 @@
 package internals;
 
-import java.util.function.BiFunction;
+import java.util.List;
 import java.util.function.Function;
 
 public class JNDArray {
@@ -243,6 +243,14 @@ public class JNDArray {
 
     public static Tensor where(Tensor tensor, Function<Number, Number> function) {
         return TensorWhereFunction.where(tensor, function);
+    }
+
+    public static List<int[]> indices(Tensor tensor) {
+        return TensorIndices.indices(tensor);
+    }
+
+    public static List<int[]> indices(Tensor tensor, Function<Number, Boolean> function) {
+        return TensorIndices.indices(tensor, function);
     }
 
 }
