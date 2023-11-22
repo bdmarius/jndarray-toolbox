@@ -71,4 +71,24 @@ public class TensorEqualsTest {
         assertNotEquals(tensor1, tensor2);
     }
 
+    @Test
+    public void testEquals_WithDelta() {
+        Tensor tensor1 = new Tensor(new double[][]{
+                {1d, 2d, 3d},
+                {4d, 5d, 6d},
+                {7d, 8d, 9d},
+                {10d, 11d, 12d}
+        });
+        Tensor tensor2 = new Tensor(new double[][]{
+                {1.1d, 2.1d, 3.1d},
+                {4.1d, 5.1d, 6.1d},
+                {7.1d, 8.1d, 9.1d},
+                {10.1d, 11.1d, 12.1d}
+        });
+        assertNotEquals(tensor1, tensor2);
+        assertTrue(tensor1.equals(tensor2, 0.2));
+        tensor2.set(5, 0, 0);
+        assertFalse(tensor1.equals(tensor2, 0.2));
+    }
+
 }

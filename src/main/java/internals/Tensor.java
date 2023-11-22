@@ -326,6 +326,25 @@ public final class Tensor {
     }
 
     /**
+     * Returns true if all elements are equal with a small delta
+     */
+    public boolean equals(Object o, double delta) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Tensor tensor = (Tensor) o;
+        if (!Arrays.equals(getShape(), tensor.getShape())) {
+            return false;
+        }
+
+        for (int i = 0; i < internalIndexingTable.length; i++) {
+            if (Math.abs(getFromInternalArray(i).doubleValue() - tensor.getFromInternalArray(i).doubleValue()) > delta) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
      * In order to know where to put brackets, we look at the shape array in reverse.
      * Before every element of index divisible with "shape[n-1]" we append "]\n["
      * Before every element of index divisible with "shape[n-1] * shape[n-2]" we append "]]\n[[" and so on, except for shape[0]
