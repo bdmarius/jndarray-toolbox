@@ -30,6 +30,29 @@ public class TensorReshapeTest {
     }
 
     @Test
+    public void test_Reshape_UnknownDimensionSize() {
+        Tensor tensor = new Tensor(new int[]{1, 2, 3, 4, 5, 6});
+        Tensor expected = new Tensor(new int[][]{
+                new int[] {1, 2, 3},
+                new int[] {4, 5, 6}
+        });
+        Tensor actual = tensor.reshape(new int[] {-1, 3});
+        assertEquals(expected, actual);
+        actual = tensor.reshape(new int[] {2, -1});
+        assertEquals(expected, actual);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void test_Reshape_UnknownDimensionSize_Error() {
+        Tensor tensor = new Tensor(new int[]{1, 2, 3, 4, 5, 6});
+        Tensor expected = new Tensor(new int[][]{
+                new int[] {1, 2, 3},
+                new int[] {4, 5, 6}
+        });
+        Tensor actual = tensor.reshape(new int[] {-1, -1});
+    }
+
+    @Test
     public void test_Reshape_1D_3D() {
         Tensor tensor = new Tensor(new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,
                 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12});
