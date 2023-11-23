@@ -3,6 +3,7 @@ package internals;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
+import utils.JNumDataType;
 
 import static org.junit.Assert.*;
 

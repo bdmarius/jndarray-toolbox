@@ -1,9 +1,6 @@
 package internals;
 
-import utils.NumberUtils;
-import utils.ReductionUtils;
-import utils.TetraFunction;
-import utils.TypeUtils;
+import utils.*;
 
 import java.util.Arrays;
 import java.util.function.Function;

@@ -1,7 +1,5 @@
 package utils;
 
-import internals.JNumDataType;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiFunction;

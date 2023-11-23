@@ -1,5 +1,6 @@
 package internals;
 
+import utils.JNumDataType;
 import utils.TypeUtils;
 
 public class TensorGenerator {

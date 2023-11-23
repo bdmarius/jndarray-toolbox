@@ -1,5 +1,7 @@
 package internals;
 
+import utils.JNumDataType;
+
 import java.util.List;
 import java.util.function.Function;
 

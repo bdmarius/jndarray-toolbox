@@ -1,5 +1,6 @@
 package internals;
 
+import utils.JNumDataType;
 import utils.TypeUtils;
 
 import java.lang.reflect.Array;

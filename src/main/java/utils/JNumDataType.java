@@ -1,4 +1,4 @@
-package internals;
+package utils;
 
 public enum JNumDataType {
     BYTE,
