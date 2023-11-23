@@ -13,16 +13,48 @@ public class TensorArithmetic {
         return performOperation(firstTensor, secondTensor, NumberUtils.ADD);
     }
 
+    static Tensor add(Tensor tensor, Number value) {
+        return performOperation(tensor, new Tensor(value), NumberUtils.ADD);
+    }
+
+    static Tensor add(Number value, Tensor tensor) {
+        return performOperation(new Tensor(value), tensor, NumberUtils.ADD);
+    }
+
     static Tensor subtract(Tensor firstTensor, Tensor secondTensor) {
         return performOperation(firstTensor, secondTensor, NumberUtils.SUBTRACT);
+    }
+
+    static Tensor subtract(Tensor tensor, Number value) {
+        return performOperation(tensor, new Tensor(value), NumberUtils.SUBTRACT);
+    }
+
+    static Tensor subtract(Number value, Tensor tensor) {
+        return performOperation(new Tensor(value), tensor, NumberUtils.SUBTRACT);
     }
 
     static Tensor multiply(Tensor firstTensor, Tensor secondTensor) {
         return performOperation(firstTensor, secondTensor, NumberUtils.MULTIPLY);
     }
 
+    static Tensor multiply(Tensor tensor, Number value) {
+        return performOperation(tensor, new Tensor(value), NumberUtils.MULTIPLY);
+    }
+
+    static Tensor multiply(Number value, Tensor tensor) {
+        return performOperation(new Tensor(value), tensor, NumberUtils.MULTIPLY);
+    }
+
     static Tensor divide(Tensor firstTensor, Tensor secondTensor) {
         return performOperation(firstTensor, secondTensor, NumberUtils.DIVIDE);
+    }
+
+    static Tensor divide(Tensor tensor, Number value) {
+        return performOperation(tensor, new Tensor(value), NumberUtils.DIVIDE);
+    }
+
+    static Tensor divide(Number value, Tensor tensor) {
+        return performOperation(new Tensor(value), tensor, NumberUtils.DIVIDE);
     }
 
     /*

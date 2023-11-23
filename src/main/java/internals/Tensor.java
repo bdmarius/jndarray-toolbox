@@ -113,6 +113,22 @@ public final class Tensor {
         return JNDArray.divide(this, tensor);
     }
 
+    public Tensor add(Number value) {
+        return JNDArray.add(this, value);
+    }
+
+    public Tensor subtract(Number value) {
+        return JNDArray.subtract(this, value);
+    }
+
+    public Tensor multiply(Number value) {
+        return JNDArray.multiply(this, value);
+    }
+
+    public Tensor divide(Number value) {
+        return JNDArray.divide(this, value);
+    }
+
     public Tensor powerOf(Number value) {
         return JNDArray.powerOf(this, value);
     }

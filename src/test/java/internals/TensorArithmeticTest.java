@@ -63,6 +63,44 @@ public class TensorArithmeticTest {
     }
 
     @Test
+    public void test_ScalarTensor_Scalar() {
+        Tensor a = new Tensor(10d);
+        Number b = 5d;
+
+        Tensor actual = JNDArray.add(a, b);
+        Tensor expected = new Tensor(15d);
+        assertEquals(expected, actual);
+
+        actual = JNDArray.add(b, a);
+        expected = new Tensor(15d);
+        assertEquals(expected, actual);
+
+        actual = JNDArray.subtract(a, b);
+        expected = new Tensor(5d);
+        assertEquals(expected, actual);
+
+        actual = JNDArray.subtract(b, a);
+        expected = new Tensor(-5d);
+        assertEquals(expected, actual);
+
+        actual = JNDArray.multiply(a, b);
+        expected = new Tensor(50d);
+        assertEquals(expected, actual);
+
+        actual = JNDArray.multiply(b, a);
+        expected = new Tensor(50d);
+        assertEquals(expected, actual);
+
+        actual = JNDArray.divide(a, b);
+        expected = new Tensor(2d);
+        assertEquals(expected, actual);
+
+        actual = JNDArray.divide(b, a);
+        expected = new Tensor(0.5);
+        assertEquals(expected, actual);
+    }
+
+    @Test
     public void test_Scalar_1D() {
         Tensor a = new Tensor(10d);
         Tensor b = new Tensor(new double[] {5, 5, 5});

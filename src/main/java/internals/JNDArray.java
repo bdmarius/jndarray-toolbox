@@ -33,6 +33,38 @@ public class JNDArray {
         return TensorArithmetic.divide(firstTensor, secondTensor);
     }
 
+    public static Tensor add(Tensor tensor, Number value) {
+        return TensorArithmetic.add(tensor, value);
+    }
+
+    public static Tensor subtract(Tensor tensor, Number value) {
+        return TensorArithmetic.subtract(tensor, value);
+    }
+
+    public static Tensor multiply(Tensor tensor, Number value) {
+        return TensorArithmetic.multiply(tensor, value);
+    }
+
+    public static Tensor divide(Tensor tensor, Number value) {
+        return TensorArithmetic.divide(tensor, value);
+    }
+
+    public static Tensor add(Number value, Tensor tensor) {
+        return TensorArithmetic.add(value, tensor);
+    }
+
+    public static Tensor subtract(Number value, Tensor tensor) {
+        return TensorArithmetic.subtract(value, tensor);
+    }
+
+    public static Tensor multiply(Number value, Tensor tensor) {
+        return TensorArithmetic.multiply(value, tensor);
+    }
+
+    public static Tensor divide(Number value, Tensor tensor) {
+        return TensorArithmetic.divide(value, tensor);
+    }
+
     public static Tensor powerOf(Tensor tensor, Number value) {
         return TensorElementMath.powerOf(tensor, value);
     }
