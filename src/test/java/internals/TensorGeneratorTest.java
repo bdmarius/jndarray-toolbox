@@ -28,4 +28,14 @@ public class TensorGeneratorTest {
         });
         assertEquals(expected, JNDArray.ones(JNumDataType.INT, new int[]{3, 4}));
     }
+
+    @Test
+    public void test_Empty() {
+        Tensor expected = new Tensor(new Integer[][]{
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+        });
+        assertEquals(expected, JNDArray.empty(new int[]{3, 4}));
+    }
 }

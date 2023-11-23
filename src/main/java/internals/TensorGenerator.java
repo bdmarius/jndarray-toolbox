@@ -18,4 +18,11 @@ public class TensorGenerator {
         return new Tensor(dataType, shape, TypeUtils::getOne);
     }
 
+    /**
+     * Returns a Tensor of a requested type and shape, filled with null values
+     */
+    static Tensor empty(int[] shape) {
+        return new Tensor(JNumDataType.DOUBLE, shape, TypeUtils::getNull);
+    }
+
 }

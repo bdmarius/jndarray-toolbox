@@ -209,6 +209,10 @@ public class JNDArray {
         return TensorGenerator.ones(dataType, shape);
     }
 
+    public static Tensor empty(int[] shape) {
+        return TensorGenerator.empty(shape);
+    }
+
     public static Tensor sum(Tensor tensor) {
         return TensorAggregation.sum(tensor);
     }

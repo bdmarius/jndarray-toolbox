@@ -3,10 +3,7 @@ package internals;
 import utils.TypeUtils;
 
 import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -51,7 +48,12 @@ public final class Tensor {
         internalArray = new Number[numberOfElements];
         buildInternalArray(data);
         buildInternalIndexingTable();
-        dataType = TypeUtils.parseDataType(getValue(0).getClass());
+        Number firstValue = getValue(0);
+        if (firstValue != null) {
+            dataType = TypeUtils.parseDataType(firstValue.getClass());
+        } else {
+            dataType = JNumDataType.DOUBLE;
+        }
         isView = false;
         base = null;
     }
@@ -408,7 +410,13 @@ public final class Tensor {
         }
 
         for (int i = 0; i < internalIndexingTable.length; i++) {
-            if (!getFromInternalArray(i).equals(tensor.getFromInternalArray(i))) {
+            Number valueFromThisTensor = getFromInternalArray(i);
+            Number valueFromOtherTensor = tensor.getFromInternalArray(i);
+            if ((valueFromThisTensor == null && valueFromOtherTensor != null) ||
+                    (valueFromThisTensor != null && valueFromOtherTensor == null)) {
+                return false;
+            }
+            if (!Objects.equals(valueFromThisTensor, valueFromOtherTensor)) {
                 return false;
             }
         }
@@ -571,7 +579,7 @@ public final class Tensor {
             int length = Array.getLength(data);
             shape.add(length);
             Object nextDimension = Array.get(data, 0);
-            if (nextDimension.getClass().isArray() && length > 1) {
+            if (nextDimension != null && nextDimension.getClass().isArray() && length > 1) {
                 int elementLength = Array.getLength(Array.get(data, 0));
                 for (int i = 1; i < length; i++) {
                     Object element = Array.get(data, i);

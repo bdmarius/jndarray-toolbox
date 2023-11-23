@@ -70,6 +70,10 @@ public class TypeUtils {
         }
     }
 
+    public static Number getNull(JNumDataType dataType) {
+        return null;
+    }
+
 
     /**
      * Gets the highest data type between 2 options
