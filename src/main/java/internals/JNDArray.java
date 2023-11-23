@@ -291,4 +291,12 @@ public class JNDArray {
         return TensorIndices.indices(tensor, function);
     }
 
+    public static Tensor flatten(Tensor tensor) {
+        return TensorFlatten.flatten(tensor);
+    }
+
+    public static Tensor diagFlat(Tensor tensor) {
+        return TensorFlatten.diagFlat(tensor);
+    }
+
 }

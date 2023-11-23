@@ -344,6 +344,10 @@ public final class Tensor {
         return JNDArray.indices(this, function);
     }
 
+    public Tensor flatten() {
+        return JNDArray.flatten(this);
+    }
+
     /**
      * Returns true if all elements are equal with a small delta
      */
