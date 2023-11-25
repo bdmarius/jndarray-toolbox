@@ -26,4 +26,13 @@ public class TensorGenerator {
         return new Tensor(JNumDataType.DOUBLE, shape, TypeUtils::getNull);
     }
 
+    static Tensor identity(JNumDataType dataType, int rows) {
+        Tensor result = zeroes(dataType, new int[] {rows, rows});
+        Number value = TypeUtils.getOne(dataType);
+        for (int i = 0; i < rows; i++) {
+            result.set(value, i, i);
+        }
+        return result;
+    }
+
 }

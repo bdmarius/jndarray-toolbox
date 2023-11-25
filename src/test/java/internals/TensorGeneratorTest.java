@@ -39,4 +39,15 @@ public class TensorGeneratorTest {
         });
         assertEquals(expected, JNDArray.empty(new int[]{3, 4}));
     }
+
+    @Test
+    public void test_Identity() {
+        Tensor expected = new Tensor(new Integer[][]{
+                {1, 0, 0, 0},
+                {0, 1, 0, 0},
+                {0, 0, 1, 0},
+                {0, 0, 0, 1},
+        });
+        assertEquals(expected, JNDArray.identity(JNumDataType.INT, 4));
+    }
 }

@@ -299,4 +299,8 @@ public class JNDArray {
         return TensorFlatten.diagFlat(tensor);
     }
 
+    public static Tensor identity(JNumDataType dataType, int rows) {
+        return TensorGenerator.identity(dataType, rows);
+    }
+
 }
