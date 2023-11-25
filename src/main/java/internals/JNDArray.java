@@ -303,4 +303,8 @@ public class JNDArray {
         return TensorGenerator.identity(dataType, rows);
     }
 
+    public static List<Tensor> enmerate(Tensor tensor) {
+        return TensorEnumerate.enumerate(tensor);
+    }
+
 }

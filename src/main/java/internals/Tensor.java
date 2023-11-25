@@ -348,6 +348,10 @@ public final class Tensor {
         return JNDArray.flatten(this);
     }
 
+    public List<Tensor> enumerate() {
+        return JNDArray.enmerate(this);
+    }
+
     /**
      * Returns true if all elements are equal with a small delta
      */
