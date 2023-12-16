@@ -381,7 +381,11 @@ public final class Tensor {
     }
 
     public List<Tensor> enumerate() {
-        return JNDArray.enmerate(this);
+        return JNDArray.enumerate(this);
+    }
+
+    public List<Number> getValues() {
+        return JNDArray.getValues(this);
     }
 
     /**

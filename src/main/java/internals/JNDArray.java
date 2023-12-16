@@ -335,8 +335,12 @@ public class JNDArray {
         return TensorGenerator.identity(dataType, rows);
     }
 
-    public static List<Tensor> enmerate(Tensor tensor) {
+    public static List<Tensor> enumerate(Tensor tensor) {
         return TensorEnumerate.enumerate(tensor);
+    }
+
+    public static List<Number> getValues(Tensor tensor) {
+        return TensorEnumerate.getValues(tensor);
     }
 
 }

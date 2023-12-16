@@ -51,6 +51,58 @@ public class TensorEnumerateTest {
         assertEquals(expected4, list.get(3));
     }
 
+    @Test
+    public void testGetValues_2D() {
+        Tensor tensor = new Tensor(new int[][]{
+                {1, 2, 3},
+                {4, 5, 6},
+                {7, 8, 9},
+                {10, 11, 12}
+        });
+        List<Number> list = tensor.getValues();
+        assertEquals(12, list.size());
+        assertEquals(1, list.get(0));
+        assertEquals(2, list.get(1));
+        assertEquals(3, list.get(2));
+        assertEquals(4, list.get(3));
+        assertEquals(5, list.get(4));
+        assertEquals(6, list.get(5));
+        assertEquals(7, list.get(6));
+        assertEquals(8, list.get(7));
+        assertEquals(9, list.get(8));
+        assertEquals(10, list.get(9));
+        assertEquals(11, list.get(10));
+        assertEquals(12, list.get(11));
+    }
+
+    @Test
+    public void testGetValues_FromView() {
+        Tensor tensor = new Tensor(new int[]{1, 2, 3, 4, 5});
+        Tensor view = JNDArray.broadcast(tensor, new int[]{4, 5});
+        List<Number> list = view.getValues();
+        assertEquals(20, list.size());
+        assertEquals(1, list.get(0));
+        assertEquals(2, list.get(1));
+        assertEquals(3, list.get(2));
+        assertEquals(4, list.get(3));
+        assertEquals(5, list.get(4));
+        assertEquals(1, list.get(5));
+        assertEquals(2, list.get(6));
+        assertEquals(3, list.get(7));
+        assertEquals(4, list.get(8));
+        assertEquals(5, list.get(9));
+        assertEquals(1, list.get(10));
+        assertEquals(2, list.get(11));
+        assertEquals(3, list.get(12));
+        assertEquals(4, list.get(13));
+        assertEquals(5, list.get(14));
+        assertEquals(1, list.get(15));
+        assertEquals(2, list.get(16));
+        assertEquals(3, list.get(17));
+        assertEquals(4, list.get(18));
+        assertEquals(5, list.get(19));
+    }
+
 
 
 }
