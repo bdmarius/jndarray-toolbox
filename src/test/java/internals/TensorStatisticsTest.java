@@ -1171,6 +1171,233 @@ public class TensorStatisticsTest {
     }
 
     @Test
+    public void test_Median_Scalar() {
+        Tensor tensor = new Tensor(5);
+        Tensor expected = new Tensor(5);
+        assertEquals(expected, tensor.median());
+    }
+
+    @Test
+    public void test_Median_1D() {
+        Tensor tensor = new Tensor(new int[] {2, 1, 3});
+        Tensor expected = new Tensor(2);
+        assertEquals(expected, tensor.median());
+    }
+
+    @Test
+    public void test_Median_2D() {
+        Tensor tensor = new Tensor(new double[][] {
+                {2, 1, 3, 4},
+                {5, 6, 7, 8},
+        });
+        Tensor expected = new Tensor(4.5);
+        assertEquals(expected, tensor.median());
+    }
+
+    @Test
+    public void test_Median_3D() {
+        Tensor tensor = new Tensor(new double[][][]{
+                {
+                        {19, 2, 3, 4},
+                        {5, 6, 7, 8},
+                        {9, 10, 11, 12}
+                },
+                {
+                        {13, 14, 15, 16},
+                        {17, 18, 1, 20},
+                        {21, 22, 23, 24},
+                }
+        });
+        Tensor expected = new Tensor(12.5);
+        assertEquals(expected, tensor.median());
+    }
+
+    @Test
+    public void test_Median_1D_KeepDimensions() {
+        Tensor tensor = new Tensor(new int[] {2, 1, 3});
+        Tensor expected = new Tensor(new int[] {2});
+        assertEquals(expected, tensor.median(true));
+    }
+
+    @Test
+    public void test_Median_2D_KeepDimensions() {
+        Tensor tensor = new Tensor(new double[][] {
+                {2, 1, 3, 4},
+                {5, 6, 7, 8},
+        });
+        Tensor expected = new Tensor(new double[][] {{4.5}});
+        assertEquals(expected, tensor.median(true));
+    }
+
+    @Test
+    public void test_Median_3D_KeepDimensions() {
+        Tensor tensor = new Tensor(new double[][][]{
+                {
+                        {19, 2, 3, 4},
+                        {5, 6, 7, 8},
+                        {9, 10, 11, 12}
+                },
+                {
+                        {13, 14, 15, 16},
+                        {17, 18, 1, 20},
+                        {21, 22, 23, 24},
+                }
+        });
+        Tensor expected = new Tensor(new double[][][] {{{12.5}}});
+        assertEquals(expected, tensor.median(true));
+    }
+
+    @Test
+    public void test_Median_1D_WithAxis() {
+        Tensor tensor = new Tensor(new double[]
+                {5, 18, -3, 20}
+        );
+        Tensor expected = new Tensor(11.5);
+        assertEquals(expected, tensor.median(new int[] {0}));
+    }
+
+    @Test
+    public void test_Median_2D_WithAxis() {
+        Tensor tensor = new Tensor(new double[][]
+                {
+                        {5, 18, -3, 20},
+                        {0, -1, -4, 16},
+                        {21, 22, 23, -2},
+                }
+        );
+        Tensor expected = new Tensor(new double[]
+                {5.0, 18.0, -3.0, 16.0}
+        );
+        assertEquals(expected, tensor.median(new int[] {0}));
+
+        expected = new Tensor(new double[]
+                {11.5, -0.5, 21.5}
+        );
+        assertEquals(expected, tensor.median(new int[] {1}));
+
+        expected = new Tensor(10.5);
+        assertEquals(expected, tensor.median(new int[] {0, 1}));
+    }
+
+    @Test
+    public void test_Median_3D_WithAxis() {
+        Tensor tensor = new Tensor(new double[][][]{
+                {
+                        {4, 6, 7, 8},
+                        {1, 2, 3, 4},
+                        {9, 10, 11, 12}
+                },
+                {
+                        {5, 18, -3, 20},
+                        {0, -1, -4, 16},
+                        {21, 22, 23, -2},
+                }
+        });
+        Tensor expected = new Tensor(new double[][] {
+                {4.5, 12, 2, 14},
+                {0.5, 0.5, -0.5, 10},
+                {15, 16, 17, 5}
+        });
+        assertEquals(expected, tensor.median(new int[] {0}));
+
+        expected = new Tensor(new double[][] {
+                {4.0, 6.0, 7.0, 8.0},
+                {5.0, 18.0, -3.0, 16.0},
+        });
+        assertEquals(expected, tensor.median(new int[] {1}));
+
+        expected = new Tensor(new double[][] {
+                {6.5, 2.5, 10.5},
+                {11.5, -0.5, 21.5},
+        });
+        assertEquals(expected, tensor.median(new int[] {2}));
+
+        expected = new Tensor(new double[] {4.5, 8.0, 5.0, 10.0});
+        assertEquals(expected, tensor.median(new int[] {0, 1}));
+
+        expected = new Tensor(new double[] {6.5,  10.5});
+        assertEquals(expected, tensor.median(new int[] {1, 2}));
+
+        expected = new Tensor(6.5);
+        assertEquals(expected, tensor.median(new int[] {0, 1, 2}));
+    }
+
+    @Test
+    public void test_Median_1D_WithAxis_KeepDimensions() {
+        Tensor tensor = new Tensor(new double[]
+                {5, 18, -3, 20}
+        );
+        Tensor expected = new Tensor(new double[] {11.5});
+        assertEquals(expected, tensor.median(new int[] {0}, true));
+    }
+
+    @Test
+    public void test_Median_2D_WithAxis_KeepDimensions() {
+        Tensor tensor = new Tensor(new double[][]
+                {
+                        {5, 18, -3, 20},
+                        {0, -1, -4, 16},
+                        {21, 22, 23, -2},
+                }
+        );
+        Tensor expected = new Tensor(new double[][]
+                {{5, 18, -3, 16}}
+        );
+        assertEquals(expected, tensor.median(new int[] {0}, true));
+
+        expected = new Tensor(new double[][]
+                {{11.5}, {-0.5}, {21.5}}
+        );
+        assertEquals(expected, tensor.median(new int[] {1}, true));
+
+        expected = new Tensor(new double[][]{{10.5}});
+        assertEquals(expected, tensor.median(new int[] {0, 1}, true));
+    }
+
+    @Test
+    public void test_Median_3D_WithAxis_KeepDimensions() {
+        Tensor tensor = new Tensor(new double[][][]{
+                {
+                        {4, 6, 7, 8},
+                        {1, 2, 3, 4},
+                        {9, 10, 11, 12}
+                },
+                {
+                        {5, 18, -3, 20},
+                        {0, -1, -4, 16},
+                        {21, 22, 23, -2},
+                }
+        });
+        Tensor expected = new Tensor(new double[][][] {{
+                {4.5, 12, 2, 14},
+                {0.5, 0.5, -0.5, 10},
+                {15, 16, 17, 5}
+        }});
+        assertEquals(expected, tensor.median(new int[] {0}, true));
+
+        expected = new Tensor(new double[][][] {{
+                {4.0, 6.0, 7.0, 8.0}},
+                {{5.0, 18.0, -3.0, 16.0},
+                }});
+        assertEquals(expected, tensor.median(new int[] {1}, true));
+
+        expected = new Tensor(new double[][][] {{
+                {6.5}, {2.5}, {10.5}},
+                {{11.5}, {-0.5}, {21.5},
+                }});
+        assertEquals(expected, tensor.median(new int[] {2}, true));
+
+        expected = new Tensor(new double[][][] {{{4.5, 8.0, 5.0, 10.0}}});
+        assertEquals(expected, tensor.median(new int[] {0, 1}, true));
+
+        expected = new Tensor(new double[][][] {{{6.5}}, {{10.5}}});
+        assertEquals(expected, tensor.median(new int[] {1, 2}, true));
+
+        expected = new Tensor(new double[][][] {{{6.5}}});
+        assertEquals(expected, tensor.median(new int[] {0, 1, 2}, true));
+    }
+
+    @Test
     public void test_Std_Scalar() {
         Tensor tensor = new Tensor(5);
         Tensor expected = new Tensor(0.0);

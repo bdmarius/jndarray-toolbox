@@ -187,6 +187,22 @@ public class JNDArray {
         return TensorStatistics.mean(tensor, axis, keepDimensions);
     }
 
+    public static Tensor median(Tensor tensor) {
+        return TensorStatistics.median(tensor);
+    }
+
+    public static Tensor median(Tensor tensor, boolean keepDimensions) {
+        return TensorStatistics.median(tensor, keepDimensions);
+    }
+
+    public static Tensor median(Tensor tensor, int[] axis) {
+        return TensorStatistics.median(tensor, axis);
+    }
+
+    public static Tensor median(Tensor tensor, int[] axis, boolean keepDimensions) {
+        return TensorStatistics.median(tensor, axis, keepDimensions);
+    }
+
     public static Tensor std(Tensor tensor) {
         return TensorStatistics.std(tensor);
     }

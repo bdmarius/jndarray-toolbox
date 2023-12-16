@@ -252,6 +252,22 @@ public final class Tensor {
         return JNDArray.mean(this, axis, keepDimensions);
     }
 
+    public Tensor median() {
+        return JNDArray.median(this);
+    }
+
+    public Tensor median(boolean keepDimensions) {
+        return JNDArray.median(this, keepDimensions);
+    }
+
+    public Tensor median(int[] axis) {
+        return JNDArray.median(this, axis);
+    }
+
+    public Tensor median(int[] axis, boolean keepDimensions) {
+        return JNDArray.median(this, axis, keepDimensions);
+    }
+
     public Tensor std() {
         return JNDArray.std(this);
     }

@@ -2,7 +2,9 @@ package internals;
 
 import utils.*;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class TensorStatistics {
 
@@ -378,6 +380,77 @@ public class TensorStatistics {
     }
 
     /**
+     * Returns the median of all numbers in the tensor.
+     * The result is a scalar tensor.
+     */
+    static Tensor median(Tensor tensor) {
+        return new Tensor(elementWiseMedian(tensor));
+    }
+
+    /**
+     * Returns the median of all numbers in the tensor.
+     * The result is a tensor with the same number of dimensions like the initial tensor, but with only 1 element
+     */
+    static Tensor median(Tensor tensor, boolean keepDimensions) {
+        if (!keepDimensions) {
+            return median(tensor);
+        }
+        int[] tensorShape = tensor.getShape();
+        int[] resultShape = new int[tensorShape.length];
+        Arrays.fill(resultShape, 1);
+        Tensor result = new Tensor(tensor.getDataType(), resultShape);
+        result.setInInternalArray(0, elementWiseMedian(tensor));
+        return result;
+    }
+
+    /**
+     * Returns the median value along axis provided.
+     * If the given tensor has a shape of length M and N axis have been provided, the result tensor is (M-N)-dimensional.
+     * The result shape is obtained by removing the axis from the original shape.
+     * For example, if the original shape is [2, 3, 4] and axis 1 has been provided, we remove the dimension of index 1
+     * from the original shape, so the result shape will be [2, 4]. If axis [0, 1] is provided, we remove dimensions of
+     * index 0 and 1 from the original shape, so the result shape will be [4].
+     * We then use indexTracker to iterate over all positions in the result tensor.
+     * For any given indexTracker, we get a slice of the original tensor.
+     * The args for the slice are provided like this:
+     * - The entire length of that dimension, if axis for that dimension has been provided
+     * - The value from the index tracker, if axis for that dimension has not been provided
+     * Then the median for that position in the indexTracker is exactly the median from that slice.
+     */
+    static Tensor median(Tensor tensor, int[] axis) {
+        int[] oldShape = tensor.getShape();
+        ReductionUtils.axisValidation(oldShape.length, axis);
+        if (axis.length == oldShape.length) {
+            return tensor.median();
+        }
+        return ReductionUtils.axisWiseProcessing(tensor, oldShape, axis, TensorStatistics::median, false);
+    }
+
+    /**
+     * Returns the median value along axis provided.
+     * If the given tensor has a shape of length M and N axis have been provided, the result tensor is M-dimensional.
+     * The result shape is obtained by replacing items in the original shape with 1s if they appear in the axis.
+     * For example, if the original shape is [2, 3, 4] and axis 1 has been provided, the result shape will be [2, 1, 4]
+     * We then use indexTracker to iterate over all positions in the result tensor.
+     * For any given indexTracker, we get a slice of the original tensor.
+     * The args for the slice are provided like this:
+     * - The entire length of that dimension, if axis for that dimension has been provided
+     * - The value from the index tracker, if axis for that dimension has not been provided
+     * Then the median for that position in the indexTracker is exactly the median from that slice.
+     */
+    static Tensor median(Tensor tensor, int[] axis, boolean keepDimensions) {
+        if (!keepDimensions) {
+            return median(tensor, axis);
+        }
+        int[] oldShape = tensor.getShape();
+        ReductionUtils.axisValidation(oldShape.length, axis);
+        if (axis.length == oldShape.length) {
+            return tensor.median(keepDimensions);
+        }
+        return ReductionUtils.axisWiseProcessing(tensor, oldShape, axis, TensorStatistics::median, true);
+    }
+
+    /**
      * Returns the standard deviation of all numbers in the tensor.
      * The result is a scalar tensor.
      */
@@ -463,6 +536,22 @@ public class TensorStatistics {
             result = NumberUtils.addElements(tensor.getDataType(), result, tensor.getDataType(), tensor.getFromInternalArray(i));
         }
         return NumberUtils.divideElements(tensor.getDataType(), result, JNumDataType.INT, tensor.getInternalIndexingTableSize());
+    }
+
+    private static Number elementWiseMedian(Tensor tensor) {
+        Number[] values = new Number[tensor.getInternalIndexingTableSize()];
+
+        for (int i = 0; i < tensor.getInternalIndexingTableSize(); i++) {
+            values[i] = tensor.getFromInternalArray(i);
+        }
+        Arrays.sort(values);
+        if (values.length % 2 == 0) {
+            Number sum = NumberUtils.addElements(tensor.getDataType(), values[values.length / 2],
+                    tensor.getDataType(), values[values.length/2 - 1]);
+            return NumberUtils.divideElements(tensor.getDataType(), sum, JNumDataType.INT, 2);
+        } else {
+            return values[values.length / 2];
+        }
     }
 
     private static Number elementWiseStd(Tensor tensor) {
