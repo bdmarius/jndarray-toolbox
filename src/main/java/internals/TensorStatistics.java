@@ -4,6 +4,7 @@ import utils.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 public class TensorStatistics {
@@ -451,6 +452,78 @@ public class TensorStatistics {
     }
 
     /**
+     * Returns the mode of all numbers in the tensor.
+     * The result is a scalar tensor.
+     */
+    static Tensor mode(Tensor tensor) {
+        return new Tensor(elementWiseMode(tensor));
+    }
+
+    /**
+     * Returns the mode of all numbers in the tensor.
+     * The result is a tensor with the same number of dimensions like the initial tensor, but with only 1 element
+     */
+    static Tensor mode(Tensor tensor, boolean keepDimensions) {
+        if (!keepDimensions) {
+            return mode(tensor);
+        }
+        int[] tensorShape = tensor.getShape();
+        int[] resultShape = new int[tensorShape.length];
+        Arrays.fill(resultShape, 1);
+        Tensor result = new Tensor(tensor.getDataType(), resultShape);
+        result.setInInternalArray(0, elementWiseMode(tensor));
+        return result;
+    }
+
+    /**
+     * Returns the mode value along axis provided.
+     * If the given tensor has a shape of length M and N axis have been provided, the result tensor is (M-N)-dimensional.
+     * The result shape is obtained by removing the axis from the original shape.
+     * For example, if the original shape is [2, 3, 4] and axis 1 has been provided, we remove the dimension of index 1
+     * from the original shape, so the result shape will be [2, 4]. If axis [0, 1] is provided, we remove dimensions of
+     * index 0 and 1 from the original shape, so the result shape will be [4].
+     * We then use indexTracker to iterate over all positions in the result tensor.
+     * For any given indexTracker, we get a slice of the original tensor.
+     * The args for the slice are provided like this:
+     * - The entire length of that dimension, if axis for that dimension has been provided
+     * - The value from the index tracker, if axis for that dimension has not been provided
+     * Then the mode for that position in the indexTracker is exactly the mode from that slice.
+     */
+    static Tensor mode(Tensor tensor, int[] axis) {
+        int[] oldShape = tensor.getShape();
+        ReductionUtils.axisValidation(oldShape.length, axis);
+        if (axis.length == oldShape.length) {
+            return tensor.mode();
+        }
+        return ReductionUtils.axisWiseProcessing(tensor, oldShape, axis, TensorStatistics::mode, false);
+    }
+
+    /**
+     * Returns the mode value along axis provided.
+     * If the given tensor has a shape of length M and N axis have been provided, the result tensor is M-dimensional.
+     * The result shape is obtained by replacing items in the original shape with 1s if they appear in the axis.
+     * For example, if the original shape is [2, 3, 4] and axis 1 has been provided, the result shape will be [2, 1, 4]
+     * We then use indexTracker to iterate over all positions in the result tensor.
+     * For any given indexTracker, we get a slice of the original tensor.
+     * The args for the slice are provided like this:
+     * - The entire length of that dimension, if axis for that dimension has been provided
+     * - The value from the index tracker, if axis for that dimension has not been provided
+     * Then the mode for that position in the indexTracker is exactly the mode from that slice.
+     */
+    static Tensor mode(Tensor tensor, int[] axis, boolean keepDimensions) {
+        if (!keepDimensions) {
+            return mode(tensor, axis);
+        }
+        int[] oldShape = tensor.getShape();
+        ReductionUtils.axisValidation(oldShape.length, axis);
+        if (axis.length == oldShape.length) {
+            return tensor.mode(keepDimensions);
+        }
+        return ReductionUtils.axisWiseProcessing(tensor, oldShape, axis, TensorStatistics::mode, true);
+    }
+
+
+    /**
      * Returns the standard deviation of all numbers in the tensor.
      * The result is a scalar tensor.
      */
@@ -552,6 +625,27 @@ public class TensorStatistics {
         } else {
             return values[values.length / 2];
         }
+    }
+
+    private static Number elementWiseMode(Tensor tensor) {
+        HashMap<Number, Integer> frequencies = new HashMap<Number, Integer>();
+        int max  = 1;
+        Number result = tensor.getFromInternalArray(0);;
+        for (int i = 0; i < tensor.getInternalIndexingTableSize(); i++) {
+            Number currentValue = tensor.getFromInternalArray(i);
+            if (frequencies.get(currentValue) != null) {
+                int count = frequencies.get(currentValue);
+                count++;
+                frequencies.put(currentValue, count);
+                if (count > max) {
+                    result = currentValue;
+                    max = count;
+                }
+            } else {
+                frequencies.put(currentValue, 1);
+            }
+        }
+        return result;
     }
 
     private static Number elementWiseStd(Tensor tensor) {

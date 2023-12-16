@@ -268,6 +268,22 @@ public final class Tensor {
         return JNDArray.median(this, axis, keepDimensions);
     }
 
+    public Tensor mode() {
+        return JNDArray.mode(this);
+    }
+
+    public Tensor mode(boolean keepDimensions) {
+        return JNDArray.mode(this, keepDimensions);
+    }
+
+    public Tensor mode(int[] axis) {
+        return JNDArray.mode(this, axis);
+    }
+
+    public Tensor mode(int[] axis, boolean keepDimensions) {
+        return JNDArray.mode(this, axis, keepDimensions);
+    }
+
     public Tensor std() {
         return JNDArray.std(this);
     }

@@ -1398,6 +1398,233 @@ public class TensorStatisticsTest {
     }
 
     @Test
+    public void test_Mode_Scalar() {
+        Tensor tensor = new Tensor(5);
+        Tensor expected = new Tensor(5);
+        assertEquals(expected, tensor.mode());
+    }
+
+    @Test
+    public void test_Mode_1D() {
+        Tensor tensor = new Tensor(new int[] {2, 1, 2});
+        Tensor expected = new Tensor(2);
+        assertEquals(expected, tensor.mode());
+    }
+
+    @Test
+    public void test_Mode_2D() {
+        Tensor tensor = new Tensor(new double[][] {
+                {2, 1, 3, 4},
+                {3, 6, 3, 8},
+        });
+        Tensor expected = new Tensor(3.0);
+        assertEquals(expected, tensor.mode());
+    }
+
+    @Test
+    public void test_Mode_3D() {
+        Tensor tensor = new Tensor(new double[][][]{
+                {
+                        {19, 2, 3, 4},
+                        {5, 6, 7, 8},
+                        {9, 10, 11, 12}
+                },
+                {
+                        {13, 14, 15, 16},
+                        {17, 18, 1, 20},
+                        {21, 2, 23, 24},
+                }
+        });
+        Tensor expected = new Tensor(2.0);
+        assertEquals(expected, tensor.mode());
+    }
+
+    @Test
+    public void test_Mode_1D_KeepDimensions() {
+        Tensor tensor = new Tensor(new int[] {2, 1, 3});
+        Tensor expected = new Tensor(new int[] {2});
+        assertEquals(expected, tensor.mode(true));
+    }
+
+    @Test
+    public void test_Mode_2D_KeepDimensions() {
+        Tensor tensor = new Tensor(new double[][] {
+                {2, 1, 3, 4},
+                {5, 6, 7, 8},
+        });
+        Tensor expected = new Tensor(new double[][] {{2.0}});
+        assertEquals(expected, tensor.mode(true));
+    }
+
+    @Test
+    public void test_Mode_3D_KeepDimensions() {
+        Tensor tensor = new Tensor(new double[][][]{
+                {
+                        {19, 2, 3, 4},
+                        {5, 6, 7, 8},
+                        {9, 10, 11, 12}
+                },
+                {
+                        {13, 14, 15, 16},
+                        {17, 18, 1, 20},
+                        {21, 22, 23, 24},
+                }
+        });
+        Tensor expected = new Tensor(new double[][][] {{{19.0}}});
+        assertEquals(expected, tensor.mode(true));
+    }
+
+    @Test
+    public void test_Mode_1D_WithAxis() {
+        Tensor tensor = new Tensor(new double[]
+                {5, 18, -3, 5}
+        );
+        Tensor expected = new Tensor(5.0);
+        assertEquals(expected, tensor.mode(new int[] {0}));
+    }
+
+    @Test
+    public void test_Mode_2D_WithAxis() {
+        Tensor tensor = new Tensor(new double[][]
+                {
+                        {5, 18, -3, 5},
+                        {0, -1, -4, 16},
+                        {21, 18, 23, -2},
+                }
+        );
+        Tensor expected = new Tensor(new double[]
+                {5.0, 18.0, -3.0, 5.0}
+        );
+        assertEquals(expected, tensor.mode(new int[] {0}));
+
+        expected = new Tensor(new double[]
+                {5.0, 0.0, 21.0}
+        );
+        assertEquals(expected, tensor.mode(new int[] {1}));
+
+        expected = new Tensor(5.0);
+        assertEquals(expected, tensor.mode(new int[] {0, 1}));
+    }
+
+    @Test
+    public void test_Mode_3D_WithAxis() {
+        Tensor tensor = new Tensor(new double[][][]{
+                {
+                        {4, 6, 7, 8},
+                        {1, 2, 3, 4},
+                        {9, 10, 11, 12}
+                },
+                {
+                        {5, 18, -3, 20},
+                        {0, -1, -4, 16},
+                        {21, 22, 23, -2},
+                }
+        });
+        Tensor expected = new Tensor(new double[][] {
+                {4, 6, 7, 8},
+                {1, 2, 3, 4},
+                {9, 10, 11, 12}
+        });
+        assertEquals(expected, tensor.mode(new int[] {0}));
+
+        expected = new Tensor(new double[][] {
+                {4.0, 6.0, 7.0, 8.0},
+                {5.0, 18.0, -3.0, 20.0},
+        });
+        assertEquals(expected, tensor.mode(new int[] {1}));
+
+        expected = new Tensor(new double[][] {
+                {4.0, 1.0, 9.0},
+                {5.0, 0.0, 21.0},
+        });
+        assertEquals(expected, tensor.mode(new int[] {2}));
+
+        expected = new Tensor(new double[] {4.0, 6.0, 7.0, 8.0});
+        assertEquals(expected, tensor.mode(new int[] {0, 1}));
+
+        expected = new Tensor(new double[] {4.0, 5.0});
+        assertEquals(expected, tensor.mode(new int[] {1, 2}));
+
+        expected = new Tensor(4.0);
+        assertEquals(expected, tensor.mode(new int[] {0, 1, 2}));
+    }
+
+    @Test
+    public void test_Mode_1D_WithAxis_KeepDimensions() {
+        Tensor tensor = new Tensor(new double[]
+                {5, 18, -3, 18}
+        );
+        Tensor expected = new Tensor(new double[] {18});
+        assertEquals(expected, tensor.mode(new int[] {0}, true));
+    }
+
+    @Test
+    public void test_Mode_2D_WithAxis_KeepDimensions() {
+        Tensor tensor = new Tensor(new double[][]
+                {
+                        {5, 18, -3, 20},
+                        {0, -1, -4, 16},
+                        {5, 18, -3, 20},
+                }
+        );
+        Tensor expected = new Tensor(new double[][]
+                {{5, 18, -3, 20}}
+        );
+        assertEquals(expected, tensor.mode(new int[] {0}, true));
+
+        expected = new Tensor(new double[][]
+                {{5}, {0}, {5}}
+        );
+        assertEquals(expected, tensor.mode(new int[] {1}, true));
+
+        expected = new Tensor(new double[][]{{5}});
+        assertEquals(expected, tensor.mode(new int[] {0, 1}, true));
+    }
+
+    @Test
+    public void test_Mode_3D_WithAxis_KeepDimensions() {
+        Tensor tensor = new Tensor(new double[][][]{
+                {
+                        {4, 6, 7, 8},
+                        {1, 2, 3, 4},
+                        {9, 10, 11, 12}
+                },
+                {
+                        {5, 18, -3, 20},
+                        {0, -1, -4, 16},
+                        {21, 22, 23, -2},
+                }
+        });
+        Tensor expected = new Tensor(new double[][][] {{
+                {4, 6, 7, 8},
+                {1, 2, 3, 4},
+                {9, 10, 11, 12}
+        }});
+        assertEquals(expected, tensor.mode(new int[] {0}, true));
+
+        expected = new Tensor(new double[][][] {{
+                {4.0, 6.0, 7.0, 8.0}},
+                {{5.0, 18.0, -3.0, 20},
+                }});
+        assertEquals(expected, tensor.mode(new int[] {1}, true));
+
+        expected = new Tensor(new double[][][] {{
+                {4.0}, {1.0}, {9.0}},
+                {{5.0}, {0.0}, {21.0},
+                }});
+        assertEquals(expected, tensor.mode(new int[] {2}, true));
+
+        expected = new Tensor(new double[][][] {{{4.0, 6.0, 7.0, 8.0}}});
+        assertEquals(expected, tensor.mode(new int[] {0, 1}, true));
+
+        expected = new Tensor(new double[][][] {{{4.0}}, {{5.0}}});
+        assertEquals(expected, tensor.mode(new int[] {1, 2}, true));
+
+        expected = new Tensor(new double[][][] {{{4.0}}});
+        assertEquals(expected, tensor.mode(new int[] {0, 1, 2}, true));
+    }
+
+    @Test
     public void test_Std_Scalar() {
         Tensor tensor = new Tensor(5);
         Tensor expected = new Tensor(0.0);

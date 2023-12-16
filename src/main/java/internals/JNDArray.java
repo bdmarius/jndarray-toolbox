@@ -203,6 +203,22 @@ public class JNDArray {
         return TensorStatistics.median(tensor, axis, keepDimensions);
     }
 
+    public static Tensor mode(Tensor tensor) {
+        return TensorStatistics.mode(tensor);
+    }
+
+    public static Tensor mode(Tensor tensor, boolean keepDimensions) {
+        return TensorStatistics.mode(tensor, keepDimensions);
+    }
+
+    public static Tensor mode(Tensor tensor, int[] axis) {
+        return TensorStatistics.mode(tensor, axis);
+    }
+
+    public static Tensor mode(Tensor tensor, int[] axis, boolean keepDimensions) {
+        return TensorStatistics.mode(tensor, axis, keepDimensions);
+    }
+
     public static Tensor std(Tensor tensor) {
         return TensorStatistics.std(tensor);
     }
