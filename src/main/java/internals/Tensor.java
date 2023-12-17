@@ -78,6 +78,10 @@ public final class Tensor {
         setValue(newValue, index);
     }
 
+    public void set(int[][] limits, Tensor secondTensor) {
+        JNDArray.set(limits, this, secondTensor);
+    }
+
     public Tensor view() {
         Tensor result = this.clone();
         result.numberOfElements = 0;

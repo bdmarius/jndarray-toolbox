@@ -343,4 +343,8 @@ public class JNDArray {
         return TensorEnumerate.getValues(tensor);
     }
 
+    public static void set(int[][] limits, Tensor firstTensor, Tensor secondTensor) {
+        TensorAssign.assign(limits, firstTensor, secondTensor);
+    }
+
 }
