@@ -347,4 +347,8 @@ public class JNDArray {
         TensorAssign.assign(limits, firstTensor, secondTensor);
     }
 
+    public static Tensor concatenate(Tensor firstTensor, Tensor secondTensor, int axis) {
+        return TensorConcatenate.concatenate(firstTensor, secondTensor, axis);
+    }
+
 }

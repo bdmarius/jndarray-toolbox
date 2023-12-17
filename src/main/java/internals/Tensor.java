@@ -392,6 +392,10 @@ public final class Tensor {
         return JNDArray.getValues(this);
     }
 
+    public Tensor concatenate(Tensor secondTensor, int axis) {
+        return JNDArray.concatenate(this, secondTensor, axis);
+    }
+
     /**
      * Returns true if all elements are equal with a small delta
      */
