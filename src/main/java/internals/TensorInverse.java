@@ -41,7 +41,7 @@ public class TensorInverse {
             }
         }
 
-        // The inverse is the right side of the augmented matrix - the positions were the identity matrix was initially added
+        // The inverse is the right side of the augmented matrix - the positions where the identity matrix was initially added
         return augmentedTensor.slice(new int[][] {{0, shape[0] - 1}, {shape[1], 2 * shape[1] - 1}});
     }
 
