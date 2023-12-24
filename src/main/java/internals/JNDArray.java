@@ -351,8 +351,4 @@ public class JNDArray {
         return TensorConcatenate.concatenate(firstTensor, secondTensor, axis);
     }
 
-    public static Tensor inverse(Tensor tensor) {
-        return TensorInverse.inverse(tensor);
-    }
-
 }

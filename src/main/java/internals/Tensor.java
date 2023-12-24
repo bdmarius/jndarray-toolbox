@@ -396,10 +396,6 @@ public final class Tensor {
         return JNDArray.concatenate(this, secondTensor, axis);
     }
 
-    public Tensor inverse() {
-        return JNDArray.inverse(this);
-    }
-
     /**
      * Returns true if all elements are equal with a small delta
      */
